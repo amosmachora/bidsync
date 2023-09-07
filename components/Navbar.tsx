@@ -1,33 +1,14 @@
 "use client";
 
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useConvexAuth, useMutation } from "convex/react";
-import React, { useEffect, useState } from "react";
+import { useConvexAuth } from "convex/react";
 import { Skeleton } from "./ui/skeleton";
 
 export const Navbar = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const { user } = useUser();
-  const storeUser = useMutation(api.users.storeUser);
-  const [userId, setUserId] = useState<Id<"users"> | null>(null);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      return;
-    }
-
-    async function createUser() {
-      const id = await storeUser();
-      setUserId(id);
-    }
-
-    createUser();
-    return () => setUserId(null);
-  }, [isAuthenticated, storeUser, user?.id]);
 
   return (
     <div className="flex py-4 px-[5%] justify-between show">

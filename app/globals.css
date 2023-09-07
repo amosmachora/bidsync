@@ -90,3 +90,7 @@
 .show {
   @apply outline-red-500 outline-1 outline-dashed;
 }
+
+.fa-spin {
+  animation-duration: 0.5s;
+}

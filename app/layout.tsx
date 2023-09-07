@@ -1,15 +1,9 @@
-"use client";
-
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ClerkProvider, useAuth } from "@clerk/clerk-react";
-import { ConvexReactClient } from "convex/react";
+import ConvexClientProvider from "./ConvexClientProvider";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
-
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,11 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClerkProvider publishableKey="pk_test_YXdhaXRlZC1jcm93LTU0LmNsZXJrLmFjY291bnRzLmRldiQ">
-          <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-            {children}
-          </ConvexProviderWithClerk>
-        </ClerkProvider>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>
   );

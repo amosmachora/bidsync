@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Stage = () => {
-  return <div>Stage</div>;
+  return <div className="show h-1/2">Stage</div>;
 };
