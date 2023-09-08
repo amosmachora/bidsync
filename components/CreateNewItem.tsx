@@ -107,6 +107,7 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
       }
     }
 
+    toast.success("successfully created bid item");
     setIsSubmitting(false);
   };
 

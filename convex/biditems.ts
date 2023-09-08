@@ -42,6 +42,27 @@ export const addImageIdsToBidItem = internalMutation({
   },
 });
 
+export const getBidItemsByUserId = query({
+  args: { userId: v.optional(v.id("users")) },
+  handler: async ({ db, auth }, { userId }) => {
+    const identity = auth.getUserIdentity();
+
+    if (!identity) {
+      return null;
+    }
+
+    const userBidItems = await db
+      .query("biditems")
+      .filter((q) => {
+        return q.eq(q.field("author"), userId);
+      })
+      .order("desc")
+      .collect();
+
+    return userBidItems;
+  },
+});
+
 // export const getBidItemByItemId = query({
 //   args: { bidItemId: v.id("biditems") },
 //   handler: async ({ db }, { bidItemId }) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInButton, useUser } from "@clerk/clerk-react";
+import { SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useConvexAuth } from "convex/react";
@@ -51,7 +51,7 @@ export const Navbar = () => {
           <SignInButton mode="modal" />
         </div>
       )}
-      {/* {isAuthenticated && <SignOutButton />} */}
+      {isAuthenticated && <SignOutButton />}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function useStoreUserEffect() {
   const storeUser = useMutation(api.users.storeUser);
-  const { isAuthenticated, isLoading } = useConvexAuth();
+  const { isAuthenticated } = useConvexAuth();
 
   const [userId, setUserId] = useState<Id<"users"> | null>(null);
   const { user } = useUser();

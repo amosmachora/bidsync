@@ -10,11 +10,22 @@ export const addNewUserMessage = internalMutation({
       return null;
     }
 
-    return await db.insert("messages", {
+    const insertDocId = await db.insert("messages", {
       body: `Welcoming ${name}!`,
       author: userId,
       isWelcomingMessage: true,
     });
+
+    console.log(insertDocId);
+
+    return insertDocId;
+  },
+});
+
+export const addNewUserMessageAction = action({
+  args: { name: v.string(), userId: v.id("users") },
+  handler: async ({ runMutation }, { name, userId }) => {
+    await runMutation(internal.messages.addNewUserMessage, { name, userId });
   },
 });
 
@@ -31,12 +42,5 @@ export const sendNewMessage = mutation({
   args: { body: v.string(), author: v.id("users") },
   handler: async ({ db }, { author, body }) => {
     return await db.insert("messages", { body, author });
-  },
-});
-
-export const newMessageAction = action({
-  args: { name: v.string(), userId: v.id("users") },
-  handler: async ({ runMutation }, { name, userId }) => {
-    await runMutation(internal.messages.addNewUserMessage, { name, userId });
   },
 });

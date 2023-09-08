@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { api } from "./_generated/api";
+
 import { mutation, query } from "./_generated/server";
 
 export const storeUser = mutation({
@@ -18,25 +19,30 @@ export const storeUser = mutation({
       )
       .unique();
 
-    if (user !== null) {
+    if (!user) {
+      console.log("user was not found!");
+      // a brand new user
+      const userId = await db.insert("users", {
+        name: identity.name!,
+        tokenIdentifier: identity.tokenIdentifier,
+        imageUrl: identity.pictureUrl!,
+      });
+
+      // welcome the user
+      await scheduler.runAfter(0, api.messages.addNewUserMessageAction, {
+        name: identity.name!,
+        userId,
+      });
+
+      return userId;
+    }
+
+    if (user) {
       if (user.name !== identity.name) {
         await db.patch(user._id, { name: identity.name });
       }
       return user._id;
     }
-
-    const userId = await db.insert("users", {
-      name: identity.name!,
-      tokenIdentifier: identity.tokenIdentifier,
-      imageUrl: identity.pictureUrl!,
-    });
-
-    await scheduler.runAfter(0, api.messages.newMessageAction, {
-      name: identity.name!,
-      userId,
-    });
-
-    return userId;
   },
 });
 

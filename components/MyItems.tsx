@@ -1,4 +1,5 @@
 import { api } from "@/convex/_generated/api";
+import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "convex/react";
@@ -8,8 +9,11 @@ import { NewItemCreator } from "./CreateNewItem";
 
 export const MyItems = () => {
   const [showItemCreatorModal, setShowItemCreatorModal] = useState(false);
+  const userId = useStoreUserEffect();
 
-  const biditems = useQuery(api.biditems.getAllBidItems);
+  const biditems = useQuery(api.biditems.getBidItemsByUserId, {
+    userId: userId ?? undefined,
+  });
   return (
     <div className="w-1/4 flex-grow p-4 overflow-y-auto">
       <p className="mb-3">My Bid Items</p>
