@@ -14,7 +14,6 @@ export const NotCurrentUserMessage = ({
     userId,
   });
 
-  console.log(user);
   return (
     <div className="bg-gray-500 text-white rounded-r-md w-max p-3 max-w-[50%] text-sm">
       {message}

@@ -12,4 +12,11 @@ export default defineSchema({
     tokenIdentifier: v.string(),
     imageUrl: v.string(),
   }).index("by_token", ["tokenIdentifier"]),
+  biditems: defineTable({
+    author: v.id("users"),
+    price: v.string(),
+    description: v.string(),
+    title: v.string(),
+    imageStorageIds: v.optional(v.array(v.string())),
+  }),
 });

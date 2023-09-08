@@ -31,7 +31,7 @@ export const storeUser = mutation({
       imageUrl: identity.pictureUrl!,
     });
 
-    scheduler.runAfter(0, api.messages.newMessageAction, {
+    await scheduler.runAfter(0, api.messages.newMessageAction, {
       name: identity.name!,
       userId,
     });

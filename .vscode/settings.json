@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["Bidsync", "fortawesome", "Rldi"],
+  "cSpell.words": [
+    "biditems",
+    "Bidsync",
+    "fortawesome",
+    "Rldi",
+    "Srcs",
+    "toastify"
+  ],
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": true

@@ -14,6 +14,8 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as biditems from "../biditems";
+import type * as http from "../http";
 import type * as messages from "../messages";
 import type * as users from "../users";
 
@@ -26,6 +28,8 @@ import type * as users from "../users";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  biditems: typeof biditems;
+  http: typeof http;
   messages: typeof messages;
   users: typeof users;
 }>;

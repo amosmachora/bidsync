@@ -94,3 +94,7 @@
 .fa-spin {
   animation-duration: 0.5s;
 }
+
+.project-editor-input {
+  @apply py-2 px-2 focus:outline-2 focus:outline-blue-500 rounded border border-gray-500 transition-all;
+}
