@@ -19,4 +19,9 @@ export default defineSchema({
     title: v.string(),
     imageStorageIds: v.optional(v.array(v.string())),
   }),
+  stageitems: defineTable({
+    isOnStage: v.optional(v.boolean()),
+    bidItemId: v.id("biditems"),
+    onStageDuration: v.optional(v.number()),
+  }),
 });

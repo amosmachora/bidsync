@@ -2,14 +2,9 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { action, internalMutation, mutation, query } from "./_generated/server";
 
-export const addNewUserMessage = internalMutation({
+export const welcomingMessage = internalMutation({
   args: { userId: v.id("users"), name: v.string() },
   handler: async ({ auth, db }, { userId, name }) => {
-    const identity = await auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
-
     const insertDocId = await db.insert("messages", {
       body: `Welcoming ${name}!`,
       author: userId,
@@ -22,10 +17,10 @@ export const addNewUserMessage = internalMutation({
   },
 });
 
-export const addNewUserMessageAction = action({
+export const welcomingMessageAction = action({
   args: { name: v.string(), userId: v.id("users") },
   handler: async ({ runMutation }, { name, userId }) => {
-    await runMutation(internal.messages.addNewUserMessage, { name, userId });
+    await runMutation(internal.messages.welcomingMessage, { name, userId });
   },
 });
 

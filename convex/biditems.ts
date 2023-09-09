@@ -63,20 +63,34 @@ export const getBidItemsByUserId = query({
   },
 });
 
-// export const getBidItemByItemId = query({
-//   args: { bidItemId: v.id("biditems") },
-//   handler: async ({ db }, { bidItemId }) => {
-//     return db.get(bidItemId);
-//   },
-// });
+export const getBidItemByItemId = query({
+  args: { bidItemId: v.optional(v.id("biditems")) },
+  handler: async ({ db }, { bidItemId }) => {
+    if (!bidItemId) {
+      return null;
+    }
+    return db.get(bidItemId);
+  },
+});
 
-// export const getBidItemByItemIdAction = action({
+// export const getBidItemByItemIdAction: RegisteredAction<
+//   "public",
+//   { bidItemId: Id<"biditems"> },
+//   Promise<{
+//     _id: Id<"biditems">;
+//     _creationTime: number;
+//     imageStorageIds?: string[] | undefined;
+//     author: Id<"users">;
+//     price: string;
+//     description: string;
+//     title: string;
+//   } | null>
+// > = action({
 //   args: { bidItemId: v.id("biditems") },
 //   handler: async ({ runQuery }, { bidItemId }) => {
 //     const bidItem = await runQuery(internal.biditems.getBidItemByItemId, {
 //       bidItemId,
 //     });
-
 //     return bidItem;
 //   },
 // });

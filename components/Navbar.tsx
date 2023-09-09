@@ -13,7 +13,8 @@ export const Navbar = () => {
   return (
     <div className="flex py-4 px-[3%] justify-between show">
       <div className="flex items-center show">
-        <p className="mr-5">L</p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/crown.jpg" alt="crown" className="w-5 h-5 mr-5" />
         <p>Bidsync</p>
       </div>
       {isLoading ? (

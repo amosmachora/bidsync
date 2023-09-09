@@ -1,7 +1,13 @@
 import { BidItem as BidItemType } from "@/types/globals";
 import { useEffect, useState } from "react";
 
-export const BidItem = ({ item }: { item: BidItemType }) => {
+export const BidItem = ({
+  item,
+  addItemToStage,
+}: {
+  item: BidItemType;
+  addItemToStage: (item: BidItemType) => void;
+}) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -17,7 +23,10 @@ export const BidItem = ({ item }: { item: BidItemType }) => {
   }, [item.imageStorageIds]);
 
   return (
-    <div className="show aspect-square p-3 rounded text-sm">
+    <div
+      className="show aspect-square p-3 rounded text-sm cursor-pointer"
+      onClick={() => addItemToStage(item)}
+    >
       {imageUrl && (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img

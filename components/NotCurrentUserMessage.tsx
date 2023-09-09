@@ -15,7 +15,7 @@ export const NotCurrentUserMessage = ({
   });
 
   return (
-    <div className="bg-gray-500 text-white rounded-r-md w-max p-3 max-w-[50%] text-sm">
+    <div className="bg-gray-500 text-white rounded-r-md w-max p-3 max-w-[50%] text-sm mb-2">
       {message}
       <MessageSenderImage senderImageUrl={user?.imageUrl ?? null} />
     </div>

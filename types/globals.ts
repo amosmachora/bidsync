@@ -6,4 +6,6 @@ export type BidItem = {
   description: string;
   title: string;
   imageStorageIds?: string[];
+  isOnStage?: boolean;
+  _id?: Id<"biditems">;
 };

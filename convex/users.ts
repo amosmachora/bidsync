@@ -29,7 +29,7 @@ export const storeUser = mutation({
       });
 
       // welcome the user
-      await scheduler.runAfter(0, api.messages.addNewUserMessageAction, {
+      await scheduler.runAfter(0, api.messages.welcomingMessageAction, {
         name: identity.name!,
         userId,
       });
@@ -51,5 +51,13 @@ export const getUserImage = query({
   handler: async ({ auth, db }, { userId }) => {
     const user = await db.get(userId);
     return user;
+  },
+});
+
+export const userCount = query({
+  args: {},
+  handler: async ({ db }, {}) => {
+    const userCount = (await db.query("users").collect()).length;
+    return userCount;
   },
 });
