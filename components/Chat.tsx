@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { api } from "@/convex/_generated/api";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { useClerk } from "@clerk/clerk-react";
@@ -10,6 +9,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { CurrentUserMessage } from "./CurrentUserMessage";
 import { NotCurrentUserMessage } from "./NotCurrentUserMessage";
 import { Input } from "./ui/input";
+import { ScrollArea } from "./ui/scroll-area";
 import { WelcomingMessage } from "./WelcomingMessage";
 
 export const Chat = () => {
@@ -46,8 +46,8 @@ export const Chat = () => {
   }, [messages]);
 
   return (
-    <div className="w-full show flex flex-col h-1/2">
-      <ScrollArea className="h-3/4">
+    <div className="h-1/2 flex flex-col">
+      <ScrollArea className="show flex-grow">
         {messages?.map((message, i) => {
           const isCurrentUsersMessage = message.author === currentUserId;
           return message.isWelcomingMessage ? (

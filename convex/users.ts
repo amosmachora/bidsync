@@ -61,3 +61,11 @@ export const userCount = query({
     return userCount;
   },
 });
+
+export const getUser = query({
+  args: { userId: v.id("users") },
+  handler: async ({ auth, db }, { userId }) => {
+    const user = await db.get(userId);
+    return user;
+  },
+});

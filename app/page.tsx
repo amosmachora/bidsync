@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <main className="flex flex-col relative h-screen">
       <Navbar />
-      <div className="flex flex-grow">
-        <div className="w-3/4 show">
+      <div className="flex flex-grow show">
+        <div className="w-3/4 flex flex-col show h-full">
           <Stage />
           <Chat />
         </div>

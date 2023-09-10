@@ -1,4 +1,5 @@
 import { api } from "@/convex/_generated/api";
+import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { BidItem } from "@/types/globals";
 import { faCircleNotch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,6 +29,7 @@ export const UserConsentModal = ({
   const stageStatus = useQuery(api.stageitems.getStageStatus);
   const [onStageDuration, setOnStageDuration] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const userId = useStoreUserEffect();
 
   const handleSubmit = async () => {
     if (stageStatus) {
@@ -43,6 +45,7 @@ export const UserConsentModal = ({
     await addBidItemToStage({
       bidItemId: bidItem._id!,
       onStageDuration: onStageDuration!,
+      authorId: userId!,
     });
     setIsSubmitting(false);
   };

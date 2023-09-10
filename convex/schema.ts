@@ -23,5 +23,22 @@ export default defineSchema({
     isOnStage: v.optional(v.boolean()),
     bidItemId: v.id("biditems"),
     onStageDuration: v.optional(v.number()),
+    bidHistory: v.optional(
+      v.array(v.object({ author: v.id("users"), bidAmount: v.number() }))
+    ),
+    author: v.id("users"),
+    bidWinner: v.optional(v.id("users")),
+  }),
+  notifications: defineTable({
+    target: v.id("users"),
+    isSuccessNotification: v.boolean(),
+    hasBeenShown: v.boolean(),
+    message: v.string(),
   }),
 });
+
+// type Status = "declined" | "accepted" | "outbid" | "pending";
+
+// interface StatusInfo {
+//   status: string;
+// }
