@@ -11,9 +11,26 @@ export const welcomingMessage = internalMutation({
       isWelcomingMessage: true,
     });
 
-    console.log(insertDocId);
+    return insertDocId;
+  },
+});
+
+export const adminMessage = internalMutation({
+  args: { message: v.string() },
+  handler: async ({ db }, { message }) => {
+    const insertDocId = await db.insert("messages", {
+      body: message,
+      isAdminMessage: true,
+    });
 
     return insertDocId;
+  },
+});
+
+export const adminMessageAction = action({
+  args: { message: v.string() },
+  handler: async ({ runMutation }, { message }) => {
+    await runMutation(internal.messages.adminMessage, { message });
   },
 });
 

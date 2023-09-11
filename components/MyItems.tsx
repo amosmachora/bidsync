@@ -29,7 +29,7 @@ export const MyItems = () => {
   };
 
   return (
-    <div className="w-1/4 p-4 overflow-y-auto h-full">
+    <div className="w-1/4 p-[2%] overflow-y-auto h-full">
       <p className="mb-3">My Bid Items</p>
       <div className="grid grid-cols-2 gap-4">
         {biditems?.map((item) => (

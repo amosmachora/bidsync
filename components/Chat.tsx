@@ -6,11 +6,11 @@ import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery } from "convex/react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { AdminMessage } from "./AdminMessage";
 import { CurrentUserMessage } from "./CurrentUserMessage";
 import { NotCurrentUserMessage } from "./NotCurrentUserMessage";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
-import { WelcomingMessage } from "./WelcomingMessage";
 
 export const Chat = () => {
   const messages = useQuery(api.messages.getAllMessages);
@@ -20,6 +20,7 @@ export const Chat = () => {
   const messageRef = useRef<HTMLInputElement | null>(null);
   const { openSignIn } = useClerk();
   const invincibleDiv = useRef<HTMLDivElement | null>(null);
+  const userCount = useQuery(api.users.userCount);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,18 +47,23 @@ export const Chat = () => {
   }, [messages]);
 
   return (
-    <div className="h-1/2 flex flex-col">
-      <ScrollArea className="show flex-grow">
+    <div className="w-1/4 flex flex-col relative pb-4 overflow-y-auto h-full">
+      <p className="text-white bg-green-500 rounded-b-sm absolute top-o right-0 w-max p-3 text-xs z-50">
+        {userCount} AU
+      </p>
+      <ScrollArea className="show flex-grow h-[80vh]">
         {messages?.map((message, i) => {
           const isCurrentUsersMessage = message.author === currentUserId;
           return message.isWelcomingMessage ? (
-            <WelcomingMessage message={message.body} key={i} />
+            <AdminMessage message={message.body} key={i} />
           ) : isCurrentUsersMessage ? (
             <CurrentUserMessage message={message.body} key={i} />
+          ) : message.isAdminMessage ? (
+            <AdminMessage message={message.body} key={i} />
           ) : (
             <NotCurrentUserMessage
               message={message.body}
-              userId={message.author}
+              userId={message.author!}
               key={i}
             />
           );

@@ -3,7 +3,7 @@ import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { BidItem } from "@/types/globals";
 import { faCircleNotch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Overlay } from "./Overlay";
@@ -27,9 +27,15 @@ export const UserConsentModal = ({
 }) => {
   const addBidItemToStage = useMutation(api.stageitems.addBidItemToStage);
   const stageStatus = useQuery(api.stageitems.getStageStatus);
+  const adminMessageAction = useAction(api.messages.adminMessageAction);
+
+  const userId = useStoreUserEffect();
+  const currentUser = useQuery(api.users.getUser, {
+    userId: userId ?? undefined,
+  });
+
   const [onStageDuration, setOnStageDuration] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const userId = useStoreUserEffect();
 
   const handleSubmit = async () => {
     if (stageStatus) {
@@ -46,6 +52,9 @@ export const UserConsentModal = ({
       bidItemId: bidItem._id!,
       onStageDuration: onStageDuration!,
       authorId: userId!,
+    });
+    await adminMessageAction({
+      message: `${currentUser?.name} just added an item to the stage!`,
     });
     setIsSubmitting(false);
   };

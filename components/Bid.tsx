@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -18,11 +18,14 @@ export const Bid = ({
   bid: { author: Id<"users">; bidAmount: number };
   isCurrentUsersItem: boolean;
 }) => {
+  //bid author
   const user = useQuery(api.users.getUser, { userId: bid.author });
   const acceptBidMutation = useMutation(api.stageitems.acceptBid);
   const removeItemFromStage = useMutation(api.stageitems.removeItemFromStage);
   const onStageItem = useQuery(api.stageitems.getOnStageBidItem);
   const createNotification = useMutation(api.notifications.createNotification);
+  const adminMessageAction = useAction(api.messages.adminMessageAction);
+
   const currentUserId = useStoreUserEffect();
 
   const [isAccepting, setIsAccepting] = useState(false);
@@ -35,6 +38,7 @@ export const Bid = ({
       stageItemId: onStageItem?._id!,
     });
     setIsAccepting(false);
+    await adminMessageAction({ message: `${user?.name} won the bid!` });
     toast.success(
       `You have accepted ${user?.name}'s bid of ${bid.bidAmount} USD`
     );

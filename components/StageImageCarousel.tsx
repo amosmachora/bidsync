@@ -1,13 +1,14 @@
 import React from "react";
 import Carousel from "nuka-carousel";
+import { BidItem } from "@/types/globals";
 
 export const StageImageCarousel = ({
-  imageStorageIds,
+  onStageBidItem,
 }: {
-  imageStorageIds?: string[];
+  onStageBidItem?: BidItem | null;
 }) => {
   return (
-    <div className="w-1/2 overflow-hidden flex flex-col h-full">
+    <div className="w-1/2 overflow-hidden flex flex-col h-full show">
       <Carousel
         enableKeyboardControls
         wrapAround
@@ -15,7 +16,7 @@ export const StageImageCarousel = ({
           pagingDotsClassName: "hidden",
         }}
       >
-        {imageStorageIds?.map((id) => {
+        {onStageBidItem?.imageStorageIds?.map((id) => {
           const getImageUrl = new URL(
             `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getImage`
           );
@@ -32,6 +33,11 @@ export const StageImageCarousel = ({
           );
         })}
       </Carousel>
+      <div className="p-5">
+        <p>{onStageBidItem?.title}</p>
+        <p className="uppercase">{onStageBidItem?.price}</p>
+        <p>{onStageBidItem?.description}</p>
+      </div>
     </div>
   );
 };

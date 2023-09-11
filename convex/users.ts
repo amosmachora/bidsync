@@ -63,8 +63,11 @@ export const userCount = query({
 });
 
 export const getUser = query({
-  args: { userId: v.id("users") },
+  args: { userId: v.optional(v.id("users")) },
   handler: async ({ auth, db }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
     const user = await db.get(userId);
     return user;
   },

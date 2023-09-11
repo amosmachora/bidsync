@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { api, internal } from "./_generated/api";
+import { action, internalMutation, mutation, query } from "./_generated/server";
 
 export const getOnStageBidItem = query({
   args: {},
@@ -21,15 +22,51 @@ export const addBidItemToStage = mutation({
     onStageDuration: v.number(),
     authorId: v.id("users"),
   },
-  handler: async ({ db }, { bidItemId, onStageDuration, authorId }) => {
-    return await db.insert("stageitems", {
+  handler: async (
+    { db, scheduler },
+    { bidItemId, onStageDuration, authorId }
+  ) => {
+    const id = await db.insert("stageitems", {
       bidItemId: bidItemId,
       isOnStage: true,
       onStageDuration,
       author: authorId,
     });
+
+    // await scheduler.runAfter(0, api.stageitems.decreaseStageTimeAction, {
+    //   stageItemId: id,
+    // });
+
+    return id;
   },
 });
+
+export const decreaseStageTime = mutation({
+  args: { stageItemId: v.id("stageitems") },
+  handler: async ({ db }, { stageItemId }) => {
+    const stageItem = await db.get(stageItemId);
+
+    if (stageItem!.onStageDuration! <= 0) {
+      await db.patch(stageItemId, { isOnStage: false });
+      return;
+    }
+
+    await db.patch(stageItemId, {
+      onStageDuration: stageItem!.onStageDuration! - 1,
+    });
+  },
+});
+
+// export const decreaseStageTimeAction = action({
+//   args: { stageItemId: v.id("stageitems") },
+//   handler: async ({ runMutation }, { stageItemId }) => {
+//     setInterval(async () => {
+//       runMutation(internal.stageitems.decreaseStageTime, {
+//         stageItemId,
+//       });
+//     }, 1000);
+//   },
+// });
 
 export const getStageStatus = query({
   args: {},

@@ -12,13 +12,17 @@ export const BidHistory = () => {
 
   return (
     <ScrollArea className="mt-5 flex-grow">
-      {onStageItem?.bidHistory?.map((bid, i) => (
-        <Bid
-          bid={bid}
-          key={i}
-          isCurrentUsersItem={onStageItem.author === userId}
-        />
-      ))}
+      {onStageItem?.bidHistory ? (
+        onStageItem?.bidHistory?.map((bid, i) => (
+          <Bid
+            bid={bid}
+            key={i}
+            isCurrentUsersItem={onStageItem.author === userId}
+          />
+        ))
+      ) : (
+        <p>No Bids Yet!</p>
+      )}
     </ScrollArea>
   );
 };
