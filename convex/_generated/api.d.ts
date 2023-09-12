@@ -15,6 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as biditems from "../biditems";
+import type * as crons from "../crons";
 import type * as http from "../http";
 import type * as messages from "../messages";
 import type * as notifications from "../notifications";
@@ -31,6 +32,7 @@ import type * as users from "../users";
  */
 declare const fullApi: ApiFromModules<{
   biditems: typeof biditems;
+  crons: typeof crons;
   http: typeof http;
   messages: typeof messages;
   notifications: typeof notifications;

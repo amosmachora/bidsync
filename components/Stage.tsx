@@ -36,10 +36,6 @@ export const Stage = () => {
           } else {
             toast.warning(notification.message);
           }
-
-          // Wait for approximately 10 seconds (10,000 milliseconds) before marking as shown
-          // await new Promise((resolve) => setTimeout(resolve, 10000));
-          // await markNotificationAsShown({ notificationId: notification._id });
         }
       };
       handleNotifications(currentUserNotifications);

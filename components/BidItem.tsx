@@ -24,7 +24,7 @@ export const BidItem = ({
 
   return (
     <div
-      className="show aspect-square p-3 rounded text-sm cursor-pointer"
+      className="bg-gray-100 aspect-square p-3 rounded text-sm cursor-pointer"
       onClick={() => addItemToStage(item)}
     >
       {imageUrl && (

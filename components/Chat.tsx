@@ -47,11 +47,11 @@ export const Chat = () => {
   }, [messages]);
 
   return (
-    <div className="w-1/4 flex flex-col relative pb-4 overflow-y-auto h-full">
+    <div className="w-1/4 flex flex-col relative h-full show">
       <p className="text-white bg-green-500 rounded-b-sm absolute top-o right-0 w-max p-3 text-xs z-50">
         {userCount} AU
       </p>
-      <ScrollArea className="show flex-grow h-[80vh]">
+      <ScrollArea className="show flex-grow h-[1px]">
         {messages?.map((message, i) => {
           const isCurrentUsersMessage = message.author === currentUserId;
           return message.isWelcomingMessage ? (

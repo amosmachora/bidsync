@@ -7,6 +7,7 @@ import { useQuery } from "convex/react";
 import { useState } from "react";
 import { BidItem } from "./BidItem";
 import { NewItemCreator } from "./CreateNewItem";
+import { ScrollArea } from "./ui/scroll-area";
 import { UserConsentModal } from "./UserConsentModal";
 
 export const MyItems = () => {
@@ -29,22 +30,28 @@ export const MyItems = () => {
   };
 
   return (
-    <div className="w-1/4 p-[2%] overflow-y-auto h-full">
+    <div className="w-1/4 p-[2%] flex flex-col">
       <p className="mb-3">My Bid Items</p>
-      <div className="grid grid-cols-2 gap-4">
-        {biditems?.map((item) => (
-          <BidItem item={item} key={item._id} addItemToStage={addItemToStage} />
-        ))}
-        <div
-          className="aspect-square border rounded relative border-blue-600 cursor-pointer hover:scale-105 transition-all duration-200"
-          onClick={() => setShowItemCreatorModal(true)}
-        >
-          <FontAwesomeIcon
-            icon={faPlus}
-            className="h-5 w-5 text-blue-600 center-absolutely"
-          />
+      <ScrollArea className="flex-grow h-[1px]">
+        <div className="grid grid-cols-2 gap-4">
+          <div
+            className="aspect-square border rounded relative border-blue-600 cursor-pointer hover:scale-105 transition-all duration-200"
+            onClick={() => setShowItemCreatorModal(true)}
+          >
+            <FontAwesomeIcon
+              icon={faPlus}
+              className="h-5 w-5 text-blue-600 center-absolutely"
+            />
+          </div>
+          {biditems?.map((item) => (
+            <BidItem
+              item={item}
+              key={item._id}
+              addItemToStage={addItemToStage}
+            />
+          ))}
         </div>
-      </div>
+      </ScrollArea>
       {showItemCreatorModal && (
         <NewItemCreator close={() => setShowItemCreatorModal(false)} />
       )}
