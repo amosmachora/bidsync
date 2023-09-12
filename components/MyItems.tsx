@@ -43,13 +43,27 @@ export const MyItems = () => {
               className="h-5 w-5 text-blue-600 center-absolutely"
             />
           </div>
-          {biditems?.map((item) => (
-            <BidItem
-              item={item}
-              key={item._id}
-              addItemToStage={addItemToStage}
-            />
-          ))}
+          {biditems
+            ?.filter((bid) => !bid.isSold)
+            ?.map((item) => (
+              <BidItem
+                item={item}
+                key={item._id}
+                addItemToStage={addItemToStage}
+              />
+            ))}
+        </div>
+        <h1 className="my-5 text-green-500 text-xl">sold items</h1>
+        <div className="grid grid-cols-2 gap-4">
+          {biditems
+            ?.filter((bid) => bid.isSold)
+            ?.map((item) => (
+              <BidItem
+                item={item}
+                key={item._id}
+                addItemToStage={addItemToStage}
+              />
+            ))}
         </div>
       </ScrollArea>
       {showItemCreatorModal && (

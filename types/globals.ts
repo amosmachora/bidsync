@@ -8,6 +8,7 @@ export type BidItem = {
   imageStorageIds?: string[];
   isOnStage?: boolean;
   _id?: Id<"biditems">;
+  isSold?: boolean;
 };
 
 export type Notification = {
@@ -18,3 +19,5 @@ export type Notification = {
   hasBeenShown: boolean;
   message: string;
 };
+
+export type Status = "declined" | "accepted" | "outbid" | "pending";

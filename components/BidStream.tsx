@@ -12,7 +12,8 @@ export const BidStream = () => {
   const onStageBidItem = useQuery(api.biditems.getBidItemByItemId, {
     bidItemId: onStageItem?.bidItemId,
   });
-  const decreaseStageTime = useMutation(api.stageitems.decreaseStageTime);
+
+  const removeItemFromStage = useMutation(api.stageitems.removeItemFromStage);
 
   const [isShowingMakeBidModal, setIsShowingMakeBidModal] = useState(false);
   const currentUserId = useStoreUserEffect();
@@ -20,14 +21,22 @@ export const BidStream = () => {
   const isCurrentUsersItemBeingBidOn: boolean =
     currentUserId === onStageBidItem?.author;
 
+  const [removeFromStageCountDown, setRemoveFromStageCountDown] = useState<
+    number | null
+  >(null);
+
   useEffect(() => {
-    if (onStageItem) {
-      const id = setInterval(() => {
-        decreaseStageTime({ stageItemId: onStageItem._id });
-      }, 1000);
-      return () => clearInterval(id);
+    if (removeFromStageCountDown === 0) {
+      // this should probably be internal mutation
+      removeItemFromStage({ stageItemId: onStageItem?._id! });
     }
-  }, [decreaseStageTime, onStageItem]);
+    if (removeFromStageCountDown) {
+      const id = setInterval(() => {
+        setRemoveFromStageCountDown((prev) => (prev ? prev - 1 : null));
+      });
+      return clearInterval(id);
+    }
+  }, [onStageItem?._id, removeFromStageCountDown, removeItemFromStage]);
 
   return (
     <div className="px-[2%] flex-grow flex flex-col show">
@@ -35,15 +44,26 @@ export const BidStream = () => {
       <p className="text-center mb-2">
         {minsAndSecs(onStageItem?.onStageDuration)}
       </p>
-      <BidHistory />
-      {!isCurrentUsersItemBeingBidOn && (
+      <BidHistory setRemoveFromStageCountDown={setRemoveFromStageCountDown} />
+      {!isCurrentUsersItemBeingBidOn ? (
         <Button
           className="w-full mt-5 bg-green-500 hover:bg-green-400"
           onClick={() => setIsShowingMakeBidModal(true)}
         >
           Bid on this item
         </Button>
+      ) : (
+        <Button
+          className="w-full mt-5 bg-red-500 hover:bg-red-400"
+          onClick={() =>
+            removeItemFromStage({ stageItemId: onStageItem?._id! })
+          }
+        >
+          Remove item from stage{" "}
+          {removeFromStageCountDown && minsAndSecs(removeFromStageCountDown)}
+        </Button>
       )}
+
       {isShowingMakeBidModal && (
         <MakeBidModal
           stageItemId={onStageItem?._id!}

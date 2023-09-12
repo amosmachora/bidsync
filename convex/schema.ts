@@ -19,13 +19,20 @@ export default defineSchema({
     description: v.string(),
     title: v.string(),
     imageStorageIds: v.optional(v.array(v.string())),
+    isSold: v.optional(v.boolean()),
   }),
   stageitems: defineTable({
     isOnStage: v.optional(v.boolean()),
     bidItemId: v.id("biditems"),
     onStageDuration: v.optional(v.number()),
     bidHistory: v.optional(
-      v.array(v.object({ author: v.id("users"), bidAmount: v.number() }))
+      v.array(
+        v.object({
+          author: v.id("users"),
+          bidAmount: v.number(),
+          status: v.optional(v.string()),
+        })
+      )
     ),
     author: v.id("users"),
     bidWinner: v.optional(v.id("users")),
@@ -37,8 +44,6 @@ export default defineSchema({
     message: v.string(),
   }),
 });
-
-// type Status = "declined" | "accepted" | "outbid" | "pending";
 
 // interface StatusInfo {
 //   status: string;

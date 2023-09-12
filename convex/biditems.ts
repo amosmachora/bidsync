@@ -9,6 +9,7 @@ export const saveBidItem = mutation({
       description: v.string(),
       title: v.string(),
       images: v.optional(v.array(v.string())),
+      isSold: v.boolean(),
     }),
   },
   handler: async ({ db }, { body }) => {

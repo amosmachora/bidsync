@@ -79,6 +79,7 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
       price: formData.get("price") as string,
       description: formData.get("description") as string,
       title: formData.get("title") as string,
+      isSold: false,
     };
 
     setIsSubmitting(true);

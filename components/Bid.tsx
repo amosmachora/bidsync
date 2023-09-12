@@ -1,6 +1,8 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
+import { minsAndSecs } from "@/lib/utils";
+import { Status } from "@/types/globals";
 import {
   faCircleCheck,
   faCircleXmark,
@@ -14,13 +16,18 @@ import { toast } from "react-toastify";
 export const Bid = ({
   bid,
   isCurrentUsersItem,
+  setRemoveFromStageCountDown,
 }: {
-  bid: { author: Id<"users">; bidAmount: number };
+  bid: { author: Id<"users">; bidAmount: number; status?: string };
   isCurrentUsersItem: boolean;
+  setRemoveFromStageCountDown: React.Dispatch<
+    React.SetStateAction<number | null>
+  >;
 }) => {
   //bid author
   const user = useQuery(api.users.getUser, { userId: bid.author });
   const acceptBidMutation = useMutation(api.stageitems.acceptBid);
+  const declineBidMutation = useMutation(api.stageitems.declineBid);
   const removeItemFromStage = useMutation(api.stageitems.removeItemFromStage);
   const onStageItem = useQuery(api.stageitems.getOnStageBidItem);
   const createNotification = useMutation(api.notifications.createNotification);
@@ -36,6 +43,8 @@ export const Bid = ({
     await acceptBidMutation({
       bidWinner: bid.author,
       stageItemId: onStageItem?._id!,
+      bidId: onStageItem!.bidItemId,
+      bidAmount: bid.bidAmount,
     });
     setIsAccepting(false);
     await adminMessageAction({ message: `${user?.name} won the bid!` });
@@ -43,14 +52,14 @@ export const Bid = ({
       `You have accepted ${user?.name}'s bid of ${bid.bidAmount} USD`
     );
 
-    // this should probably be internal mutations
-    await removeItemFromStage({ stageItemId: onStageItem?._id! });
     await createNotification({
       hasBeenShown: false,
       isSuccessNotification: true,
       message: `Your bid of ${bid.bidAmount} was accepted`,
       target: bid.author,
     });
+
+    setRemoveFromStageCountDown(300);
   };
 
   const declineBid = async () => {
@@ -64,12 +73,17 @@ export const Bid = ({
       message: `Your bid of ${bid.bidAmount} USD was denied`,
       target: bid.author,
     });
+    await declineBidMutation({
+      bidAmount: bid.bidAmount,
+      stageItemId: onStageItem?._id!,
+    });
     setIsDeclining(false);
   };
 
   return (
     <div className="flex items-center show justify-between text-sm px-5">
-      <p className="text-green-500 font-semibold">{bid.bidAmount} USD</p>
+      <p className="text-green-500 font-semibold show">{bid.bidAmount} USD</p>
+      <p>{bid.status}</p>
       <div className="show">
         <p className="text-xs">
           {user?.name}{" "}
