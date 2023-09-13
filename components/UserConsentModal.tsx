@@ -27,12 +27,8 @@ export const UserConsentModal = ({
 }) => {
   const addBidItemToStage = useMutation(api.stageitems.addBidItemToStage);
   const stageStatus = useQuery(api.stageitems.getStageStatus);
-  const adminMessageAction = useAction(api.messages.adminMessageAction);
 
   const userId = useStoreUserEffect();
-  const currentUser = useQuery(api.users.getUser, {
-    userId: userId ?? undefined,
-  });
 
   const [onStageDuration, setOnStageDuration] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,9 +49,9 @@ export const UserConsentModal = ({
       onStageDuration: onStageDuration!,
       authorId: userId!,
     });
-    await adminMessageAction({
-      message: `${currentUser?.name} just added an item to the stage!`,
-    });
+    // await adminMessageAction({
+    //   message: `${currentUser?.name} just added an item to the stage!`,
+    // });
     setIsSubmitting(false);
   };
 

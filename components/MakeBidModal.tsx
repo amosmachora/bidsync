@@ -2,6 +2,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { minsAndSecs } from "@/lib/utils";
+import { BidHistory } from "@/types/globals";
 import { faCircleNotch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAction, useMutation, useQuery } from "convex/react";
@@ -13,18 +14,19 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 export const MakeBidModal = ({
-  stageItemId,
   close,
+  latestBid,
 }: {
-  stageItemId: Id<"stageitems">;
   close: () => void;
+  latestBid?: BidHistory;
 }) => {
-  const makeBidMutation = useMutation(api.stageitems.makeBid);
-  const onStageItem = useQuery(api.stageitems.getOnStageBidItem);
-  const adminMessageAction = useAction(api.messages.adminMessageAction);
-  const currentUserId = useStoreUserEffect();
-  const currentUser = useQuery(api.users.getUser, {
-    userId: currentUserId ?? undefined,
+  const userId = useStoreUserEffect();
+  const makeBidMutation = useMutation(api.bidhistories.makeBid);
+  const onStageItem = useQuery(api.stageitems.getOnStageItem);
+
+  // the bid item
+  const onStageBidItem = useQuery(api.biditems.getBidItemByItemId, {
+    bidItemId: onStageItem?.bidItemId,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,14 +38,12 @@ export const MakeBidModal = ({
     const bidAmount = parseInt(formData.get("bid-amount") as unknown as string);
     await makeBidMutation({
       bid: {
-        author: currentUserId!,
-        bidAmount: bidAmount,
+        bidAmount,
+        bidder: userId!,
+        stageItem: onStageItem?._id!,
         status: "pending",
+        itemId: onStageItem?.bidItemId!,
       },
-      stageItemId: stageItemId,
-    });
-    await adminMessageAction({
-      message: `${currentUser?.name} just made a bid of ${bidAmount} USD!`,
     });
     setIsSubmitting(false);
     toast.success("Your bid has been placed!");
@@ -60,8 +60,9 @@ export const MakeBidModal = ({
           className="h-5 w-5 text-blue-600 ml-auto cursor-pointer absolute top-5 right-5"
           onClick={close}
         />
-        <p>Latest bid: Not Bid Yet</p>
+        <p>Latest bid: {latestBid ? latestBid.bidAmount : "Not bid yet"}</p>
         <p>{minsAndSecs(onStageItem?.onStageDuration)} remaining!</p>
+        <p>Original price: {onStageBidItem?.price}</p>
         <div className="w-1/2 mx-auto mt-5">
           <Input
             type="number"

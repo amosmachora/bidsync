@@ -25,17 +25,7 @@ export default defineSchema({
     isOnStage: v.optional(v.boolean()),
     bidItemId: v.id("biditems"),
     onStageDuration: v.optional(v.number()),
-    bidHistory: v.optional(
-      v.array(
-        v.object({
-          author: v.id("users"),
-          bidAmount: v.number(),
-          status: v.optional(v.string()),
-        })
-      )
-    ),
     author: v.id("users"),
-    bidWinner: v.optional(v.id("users")),
   }),
   notifications: defineTable({
     target: v.id("users"),
@@ -43,8 +33,12 @@ export default defineSchema({
     hasBeenShown: v.boolean(),
     message: v.string(),
   }),
+  bidhistories: defineTable({
+    isBidWinner: v.optional(v.boolean()),
+    bidder: v.id("users"),
+    bidAmount: v.number(),
+    itemId: v.id("biditems"),
+    stageItem: v.id("stageitems"),
+    status: v.string(),
+  }),
 });
-
-// interface StatusInfo {
-//   status: string;
-// }

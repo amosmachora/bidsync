@@ -8,7 +8,7 @@ import {
   query,
 } from "./_generated/server";
 
-export const getOnStageBidItem = query({
+export const getOnStageItem = query({
   args: {},
   handler: async ({ db }, args) => {
     const stageItem = await db
@@ -39,6 +39,12 @@ export const addBidItemToStage = mutation({
       author: authorId,
     });
 
+    const user = await db.get(authorId);
+
+    await scheduler.runAfter(0, api.messages.adminMessageAction, {
+      message: `${user?.name} just added an item to the stage!`,
+    });
+
     return id;
   },
 });
@@ -55,85 +61,18 @@ export const getStageStatus = query({
   },
 });
 
-export const makeBid = mutation({
-  args: {
-    stageItemId: v.id("stageitems"),
-    bid: v.object({
-      author: v.id("users"),
-      bidAmount: v.number(),
-      status: v.string(),
-    }),
-  },
-  handler: async ({ db, scheduler }, { stageItemId, bid }) => {
-    const savedStageItem = await db.get(stageItemId);
-
-    return await db.patch(stageItemId, {
-      bidHistory: [...(savedStageItem?.bidHistory ?? []), bid],
-    });
-  },
-});
-
-export const acceptBid = mutation({
-  args: {
-    bidWinner: v.id("users"),
-    stageItemId: v.id("stageitems"),
-    bidId: v.id("biditems"),
-    bidAmount: v.number(),
-  },
-  handler: async (
-    { auth, db, scheduler },
-    { bidWinner, stageItemId, bidId, bidAmount }
-  ) => {
-    const stageItem = await db.get(stageItemId);
-
-    const otherBids = stageItem?.bidHistory?.filter(
-      (bid) => bid.bidAmount !== bidAmount
-    )!;
-    const updatedAsOutbidBids = [];
-
-    for (const bid of otherBids) {
-      updatedAsOutbidBids.push({ ...bid, status: "outbid" });
-    }
-
-    const bid = stageItem?.bidHistory?.find(
-      (bid) => bid.bidAmount === bidAmount
-    )!;
-
-    await db.patch(bidId, {
-      isSold: true,
-    });
-    await db.patch(stageItemId, {
-      bidWinner: bidWinner,
-      bidHistory: [{ ...bid, status: "accepted" }, ...updatedAsOutbidBids],
-    });
-  },
-});
-
-export const declineBid = mutation({
-  args: {
-    stageItemId: v.id("stageitems"),
-    bidAmount: v.number(),
-  },
-  handler: async ({ db }, { stageItemId, bidAmount }) => {
-    const stageItem = await db.get(stageItemId);
-    const otherBids = stageItem?.bidHistory?.filter(
-      (bid) => bid.bidAmount !== bidAmount
-    )!;
-    const bid = stageItem?.bidHistory?.find(
-      (bid) => bid.bidAmount === bidAmount
-    )!;
-
-    return await db.patch(stageItemId, {
-      bidHistory: [...otherBids, { ...bid, status: "declined" }],
-    });
-  },
-});
-
 export const removeItemFromStage = mutation({
   args: { stageItemId: v.id("stageitems") },
   handler: async ({ db }, { stageItemId }) => {
     await db.patch(stageItemId, {
       isOnStage: false,
     });
+  },
+});
+
+export const getStageItem = query({
+  args: { stageItemId: v.id("stageitems") },
+  handler: async ({ db }, { stageItemId }) => {
+    return await db.get(stageItemId);
   },
 });

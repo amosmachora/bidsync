@@ -55,14 +55,14 @@ export const Chat = () => {
         {messages?.map((message, i) => {
           const isCurrentUsersMessage = message.author === currentUserId;
           return message.isWelcomingMessage ? (
-            <AdminMessage message={message.body} key={i} />
+            <AdminMessage message={message} key={i} />
           ) : isCurrentUsersMessage ? (
-            <CurrentUserMessage message={message.body} key={i} />
+            <CurrentUserMessage message={message} key={i} />
           ) : message.isAdminMessage ? (
-            <AdminMessage message={message.body} key={i} />
+            <AdminMessage message={message} key={i} />
           ) : (
             <NotCurrentUserMessage
-              message={message.body}
+              message={message}
               userId={message.author!}
               key={i}
             />

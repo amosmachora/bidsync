@@ -5,14 +5,13 @@ import Carousel from "nuka-carousel";
 import { Button } from "./ui/button";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { MakeBidModal } from "./MakeBidModal";
-import { BidHistory } from "./BidHistory";
 import { StageImageCarousel } from "./StageImageCarousel";
 import { Notification } from "@/types/globals";
 import { toast } from "react-toastify";
 import { BidStream } from "./BidStream";
 
 export const Stage = () => {
-  const onStageItem = useQuery(api.stageitems.getOnStageBidItem);
+  const onStageItem = useQuery(api.stageitems.getOnStageItem);
   const onStageBidItem = useQuery(api.biditems.getBidItemByItemId, {
     bidItemId: onStageItem?.bidItemId,
   });

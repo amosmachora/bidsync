@@ -1,8 +1,9 @@
+import { globalContext } from "@/app/page";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { minsAndSecs } from "@/lib/utils";
-import { Status } from "@/types/globals";
+import { BidHistory, Status } from "@/types/globals";
 import {
   faCircleCheck,
   faCircleXmark,
@@ -10,7 +11,7 @@ import {
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAction, useMutation, useQuery } from "convex/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export const Bid = ({
@@ -18,83 +19,63 @@ export const Bid = ({
   isCurrentUsersItem,
   setRemoveFromStageCountDown,
 }: {
-  bid: { author: Id<"users">; bidAmount: number; status?: string };
+  bid: BidHistory;
   isCurrentUsersItem: boolean;
   setRemoveFromStageCountDown: React.Dispatch<
     React.SetStateAction<number | null>
   >;
 }) => {
   //bid author
-  const user = useQuery(api.users.getUser, { userId: bid.author });
-  const acceptBidMutation = useMutation(api.stageitems.acceptBid);
-  const declineBidMutation = useMutation(api.stageitems.declineBid);
-  const removeItemFromStage = useMutation(api.stageitems.removeItemFromStage);
-  const onStageItem = useQuery(api.stageitems.getOnStageBidItem);
-  const createNotification = useMutation(api.notifications.createNotification);
-  const adminMessageAction = useAction(api.messages.adminMessageAction);
+  const bidAuthor = useQuery(api.users.getUser, { userId: bid.bidder });
+  const acceptBidMutation = useMutation(api.bidhistories.acceptBid);
+  const declineBidMutation = useMutation(api.bidhistories.declineBid);
 
   const currentUserId = useStoreUserEffect();
 
   const [isAccepting, setIsAccepting] = useState(false);
   const [isDeclining, setIsDeclining] = useState(false);
+  const { setUserProfileId } = useContext(globalContext);
 
   const acceptBid = async () => {
     setIsAccepting(true);
-    await acceptBidMutation({
-      bidWinner: bid.author,
-      stageItemId: onStageItem?._id!,
-      bidId: onStageItem!.bidItemId,
-      bidAmount: bid.bidAmount,
-    });
+    await acceptBidMutation({ bid });
     setIsAccepting(false);
-    await adminMessageAction({ message: `${user?.name} won the bid!` });
     toast.success(
-      `You have accepted ${user?.name}'s bid of ${bid.bidAmount} USD`
+      `You have accepted ${bidAuthor?.name}'s bid of ${bid.bidAmount} USD`
     );
-
-    await createNotification({
-      hasBeenShown: false,
-      isSuccessNotification: true,
-      message: `Your bid of ${bid.bidAmount} was accepted`,
-      target: bid.author,
-    });
-
     setRemoveFromStageCountDown(300);
   };
 
   const declineBid = async () => {
     setIsDeclining(true);
+    await declineBidMutation({ bid });
     toast.warning(
-      `You have declined ${user?.name}'s bid of ${bid.bidAmount} USD`
+      `You have declined ${bidAuthor?.name}'s bid of ${bid.bidAmount} USD`
     );
-    await createNotification({
-      hasBeenShown: false,
-      isSuccessNotification: false,
-      message: `Your bid of ${bid.bidAmount} USD was denied`,
-      target: bid.author,
-    });
-    await declineBidMutation({
-      bidAmount: bid.bidAmount,
-      stageItemId: onStageItem?._id!,
-    });
     setIsDeclining(false);
   };
 
   return (
-    <div className="flex items-center show justify-between text-sm px-5">
+    <div className="flex items-center justify-between text-sm px-5 bg-gray-100 py-2 rounded-md">
       <p className="text-green-500 font-semibold show">{bid.bidAmount} USD</p>
-      <p>{bid.status}</p>
-      <div className="show">
+      <div
+        className="show cursor-pointer"
+        onClick={() => setUserProfileId!(bid.bidder)}
+      >
         <p className="text-xs">
-          {user?.name}{" "}
+          {bidAuthor?.name}{" "}
           <span className="italic">
-            {currentUserId === bid.author && "(you)"}{" "}
+            {currentUserId === bid.bidder && "(you)"}{" "}
           </span>{" "}
         </p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={user?.imageUrl} alt="" className="w-7 h-7 rounded ml-auto" />
+        <img
+          src={bidAuthor?.imageUrl}
+          alt=""
+          className="w-7 h-7 rounded ml-auto"
+        />
       </div>
-      {isCurrentUsersItem && (
+      {isCurrentUsersItem && bid.status === "pending" ? (
         <div className="flex">
           {isAccepting ? (
             <FontAwesomeIcon
@@ -123,6 +104,20 @@ export const Bid = ({
             />
           )}
         </div>
+      ) : (
+        <p
+          className={`${
+            bid.status === "declined"
+              ? "text-red-500"
+              : bid.status === "accepted"
+              ? "text-green-500"
+              : bid.status === "outbid"
+              ? "text-black"
+              : "text-yellow-500"
+          }`}
+        >
+          {bid.status}
+        </p>
       )}
     </div>
   );

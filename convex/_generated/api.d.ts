@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as bidhistories from "../bidhistories";
 import type * as biditems from "../biditems";
 import type * as crons from "../crons";
 import type * as http from "../http";
@@ -31,6 +32,7 @@ import type * as users from "../users";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  bidhistories: typeof bidhistories;
   biditems: typeof biditems;
   crons: typeof crons;
   http: typeof http;
