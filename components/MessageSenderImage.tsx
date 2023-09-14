@@ -1,5 +1,5 @@
-import { globalContext } from "@/app/page";
 import { Id } from "@/convex/_generated/dataModel";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
@@ -11,7 +11,7 @@ export const MessageSenderImage = ({
   senderImageUrl: string | null;
   userId: null | Id<"users">;
 }) => {
-  const { setUserProfileId } = useContext(globalContext);
+  const { setUserProfileId } = useGlobalData();
   return (
     <div
       className={`w-4 h-4 outline outline-blue-500 outline-2 rounded-full relative overflow-clip mt-2 ${

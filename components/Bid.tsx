@@ -1,6 +1,6 @@
-import { globalContext } from "@/app/page";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { minsAndSecs } from "@/lib/utils";
 import { BidHistory, Status } from "@/types/globals";
@@ -34,7 +34,7 @@ export const Bid = ({
 
   const [isAccepting, setIsAccepting] = useState(false);
   const [isDeclining, setIsDeclining] = useState(false);
-  const { setUserProfileId } = useContext(globalContext);
+  const { setUserProfileId } = useGlobalData();
 
   const acceptBid = async () => {
     setIsAccepting(true);

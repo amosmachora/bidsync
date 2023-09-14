@@ -1,18 +1,13 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "convex/react";
 import React from "react";
 import { Overlay } from "./Overlay";
 
-const UserProfileData = ({
-  userId,
-  close,
-}: {
-  userId: Id<"users"> | null;
-  close: () => void;
-}) => {
+const UserProfileData = ({ userId }: { userId: Id<"users"> | null }) => {
   const user = useQuery(api.users.getUser, { userId: userId ?? undefined });
   const userBidHistory = useQuery(api.bidhistories.getUserBidHistory, {
     userId: userId ?? undefined,
@@ -26,6 +21,11 @@ const UserProfileData = ({
   const numberOfDeclinedBids = userBidHistory?.filter(
     (bid) => bid.status === "declined"
   ).length;
+
+  const { setUserProfileId } = useGlobalData();
+  const close = () => {
+    setUserProfileId(null);
+  };
   return (
     <Overlay>
       <form className="gap-y-5 flex flex-col fixed top-1/2 z-50 -translate-y-1/2 rounded-md bg-white p-[3%] w-10/12 sm:w-1/2 left-1/2 -translate-x-1/2 shadow-md">

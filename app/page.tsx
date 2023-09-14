@@ -6,30 +6,22 @@ import { Navbar } from "@/components/Navbar";
 import { Stage } from "@/components/Stage";
 import UserProfileData from "@/components/UserProfileData";
 import { Id } from "@/convex/_generated/dataModel";
+import { GlobalDataProvider, useGlobalData } from "@/hooks/useGlobalData";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 
-export const globalContext = createContext<{
-  setUserProfileId: Dispatch<SetStateAction<Id<"users"> | null>> | null;
-}>({ setUserProfileId: null });
-
 export default function Home() {
-  const [userProfileId, setUserProfileId] = useState<null | Id<"users">>(null);
+  const { userProfileId } = useGlobalData();
   return (
     <main className="flex flex-col relative h-screen">
       <Navbar />
-      <globalContext.Provider value={{ setUserProfileId }}>
+      <GlobalDataProvider>
         <div className="flex flex-grow show">
           <Chat />
           <Stage />
           <MyItems />
         </div>
-      </globalContext.Provider>
-      {userProfileId && (
-        <UserProfileData
-          userId={userProfileId}
-          close={() => setUserProfileId(null)}
-        />
-      )}
+      </GlobalDataProvider>
+      {userProfileId && <UserProfileData userId={userProfileId} />}
     </main>
   );
 }
