@@ -20,6 +20,8 @@ export const GlobalDataProvider = ({
   children: React.ReactNode;
 }) => {
   const [userProfileId, setUserProfileId] = useState<null | Id<"users">>(null);
+
+  console.log(userProfileId);
   return (
     <globalDataContext.Provider
       value={{

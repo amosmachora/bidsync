@@ -5,7 +5,7 @@ export const Overlay = ({
   children,
   close,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   close?: () => void;
 }) => {
   return (

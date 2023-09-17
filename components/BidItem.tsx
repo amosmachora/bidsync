@@ -1,8 +1,10 @@
+import { useGlobalData } from "@/hooks/useGlobalData";
 import { BidItem as BidItemType } from "@/types/globals";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { ItemHistory } from "./ItemHistory";
+import UserProfileData from "./UserProfileData";
 
 export const BidItem = ({
   item,
@@ -13,6 +15,8 @@ export const BidItem = ({
 }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isShowingItemHistory, setIsShowingItemHistory] = useState(false);
+  const { userProfileId } = useGlobalData();
+  console.log(userProfileId);
 
   useEffect(() => {
     const firstStorageId = item.imageStorageIds?.at(0);

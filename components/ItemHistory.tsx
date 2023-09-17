@@ -1,10 +1,12 @@
 import { api } from "@/convex/_generated/api";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import { BidHistory, BidItem } from "@/types/globals";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "convex/react";
 import React from "react";
 import { Overlay } from "./Overlay";
+import { ScrollArea } from "./ui/scroll-area";
 
 export const ItemHistory = ({
   item,
@@ -18,7 +20,8 @@ export const ItemHistory = ({
   });
   console.log(bidHistory);
   return (
-    <Overlay>
+    <>
+      <Overlay close={close} />
       <div className="gap-y-5 flex flex-col fixed top-1/2 z-50 -translate-y-1/2 rounded-md bg-white p-[3%] w-10/12 sm:w-1/2 left-1/2 -translate-x-1/2 shadow-md">
         <FontAwesomeIcon
           icon={faXmark}
@@ -35,23 +38,38 @@ export const ItemHistory = ({
           <p className="w-1/4">Duration</p>
           <p className="w-1/4">Winning Bid</p>
         </div>
-        {bidHistory?.map((bid) => (
-          <Item bid={bid} key={bid._id} />
-        ))}
+        <ScrollArea className="h-[50vh]">
+          {bidHistory?.map((bid) => (
+            <Item bid={bid} key={bid._id} closeItemHistory={close} />
+          ))}
+        </ScrollArea>
       </div>
-    </Overlay>
+    </>
   );
 };
 
-export const Item = ({ bid }: { bid: BidHistory }) => {
+export const Item = ({
+  bid,
+  closeItemHistory,
+}: {
+  bid: BidHistory;
+  closeItemHistory: () => void;
+}) => {
   const user = useQuery(api.users.getUser, { userId: bid.bidder });
   const stageItem = useQuery(api.stageitems.getStageItem, {
     stageItemId: bid.stageItem,
   });
+  const { setUserProfileId } = useGlobalData();
   return (
     <div className="flex justify-between show text-center">
       <p className="w-1/4">{bid.bidAmount} USD</p>
-      <div className="w-1/4">
+      <div
+        className="w-1/4"
+        onClick={() => {
+          closeItemHistory();
+          setUserProfileId(bid.bidder);
+        }}
+      >
         <p>{user?.name}</p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={user?.imageUrl} alt="" className="h-10 w-10" />

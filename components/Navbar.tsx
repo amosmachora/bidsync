@@ -42,8 +42,12 @@ export const Navbar = () => {
             {userNotifications?.length}
           </p>
         </div>
-        {isShowingNotifications && <Notifications />}
-        {isShowingLogOutButton && <LogOutButton />}
+        {isShowingNotifications && (
+          <Notifications close={() => setIsShowingNotifications(false)} />
+        )}
+        {isShowingLogOutButton && (
+          <LogOutButton close={() => setIsShowingLogOutButton(false)} />
+        )}
         {isLoading ? (
           <ProfileDataSkeleton />
         ) : isAuthenticated ? (

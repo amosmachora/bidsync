@@ -10,7 +10,6 @@ import { GlobalDataProvider, useGlobalData } from "@/hooks/useGlobalData";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 
 export default function Home() {
-  const { userProfileId } = useGlobalData();
   return (
     <main className="flex flex-col relative h-screen">
       <Navbar />
@@ -20,8 +19,8 @@ export default function Home() {
           <Stage />
           <MyItems />
         </div>
+        <UserProfileData />
       </GlobalDataProvider>
-      {userProfileId && <UserProfileData userId={userProfileId} />}
     </main>
   );
 }
