@@ -1,3 +1,4 @@
+import { GlobalDataProvider } from "@/hooks/useGlobalData";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
@@ -22,7 +23,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <ConvexClientProvider>
           <ToastContainer />
+          <GlobalDataProvider>
+
           {children}
+          </GlobalDataProvider>
         </ConvexClientProvider>
       </body>
     </html>

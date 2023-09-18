@@ -51,6 +51,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         welcomingMessage: "#FDF7DF",
+        pinkBg: "#fafafa",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -16,12 +16,26 @@ import { toast } from "react-toastify";
 import { Overlay } from "./Overlay";
 import { Input } from "./ui/input";
 import { UploadButton } from "./UploadButton";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Id } from "@/convex/_generated/dataModel";
 
 export const NewItemCreator = ({ close }: { close: () => void }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedFilesSrcs, setSelectedFilesSrcs] = useState<string[]>([]);
+  const [onStageDuration, setOnStageDuration] = useState<number | null>(null);
+
   const saveBidItem = useMutation(api.biditems.saveBidItem);
+  const addBidItemToStage = useMutation(api.stageitems.addBidItemToStage);
+
   const userId = useStoreUserEffect();
 
   useEffect(() => {
@@ -107,43 +121,88 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
         console.log(error);
       }
     }
-
+    await handleAddItemToStage(bidItemId);
     toast.success("successfully created bid item");
     setIsSubmitting(false);
+  };
+
+  const handleAddItemToStage = async (bidItemId: Id<"biditems">) => {
+    if (!onStageDuration) {
+      toast.warning("Please pick a duration");
+      return;
+    }
+    await addBidItemToStage({
+      bidItemId: bidItemId,
+      onStageDuration: onStageDuration!,
+      authorId: userId!,
+    });
   };
 
   return (
     <Overlay>
       <form
-        className="gap-y-5 flex flex-col fixed top-1/2 z-50 -translate-y-1/2 rounded-md bg-white p-[3%] w-10/12 sm:w-1/2 left-1/2 -translate-x-1/2 shadow-md"
+        className="gap-y-5 flex flex-col fixed top-1/2 z-50 -translate-y-1/2 rounded-md bg-white p-[3%] w-10/12 sm:w-1/2 left-1/2 -translate-x-1/2 shadow-lg shadow-red-100"
         onSubmit={submitProject}
       >
         <FontAwesomeIcon
           icon={faXmark}
-          className="h-5 w-5 text-blue-600 ml-auto cursor-pointer absolute top-5 right-5"
+          className="h-5 w-5 ml-auto cursor-pointer absolute top-5 right-5"
           onClick={close}
         />
-        <h1 className="mt-5">Create a new bid item</h1>
-        <Input
-          type="text"
-          className="project-editor-input"
-          name="title"
-          placeholder="Bid title"
-          required
-        />
-        <Textarea
-          className="project-editor-input"
-          name="description"
-          placeholder="description"
-          required
-        />
-        <Input
-          type="text"
-          className="project-editor-input uppercase"
-          name="price"
-          placeholder="Price"
-          required
-        />
+        <h1 className="mt-5 font-semibold">Create a new bid item</h1>
+        <div>
+          <label htmlFor="title" className="font-medium text-sm">
+            Bid title
+          </label>
+          <Input
+            type="text"
+            className="project-editor-input"
+            name="title"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="description" className="font-medium text-sm">
+            Description
+          </label>
+          <Textarea
+            className="project-editor-input"
+            name="description"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="price" className="font-medium text-sm">
+            Price (USD)
+          </label>
+          <Input
+            type="number"
+            className="project-editor-input uppercase"
+            name="price"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="price" className="font-medium text-sm">
+            Duration (Seconds)
+          </label>
+          <Select
+            onValueChange={(value) => setOnStageDuration(parseInt(value))}
+            required
+          >
+            <SelectTrigger className="w-full mx-auto">
+              <SelectValue placeholder="Pick time" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Time</SelectLabel>
+                <SelectItem value={(5 * 60).toString()}>5 mins</SelectItem>
+                <SelectItem value={(10 * 60).toString()}>10 mins</SelectItem>
+                <SelectItem value={(15 * 60).toString()}>15 mins</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="flex py-2 px-1 w-full overflow-x-auto gap-x-3">
           {selectedFilesSrcs.map((img, i) => {
             return (
@@ -153,7 +212,7 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
                   src={img}
                   alt="image"
                   key={i}
-                  className="w-20 aspect-square outline outline-2 outline-blue-500 rounded object-cover"
+                  className="w-20 aspect-square outline outline-2 outline-[#E03636] rounded object-cover"
                 />
                 <FontAwesomeIcon
                   icon={faTrash}
@@ -166,13 +225,13 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
           <UploadButton addFileFunction={addFileToSelectedFiles} />
         </div>
         <button
-          className="w-full py-2 rounded bg-blue-500 text-white hover:bg-blue-400 duration-300"
+          className="w-full py-2 rounded bg-[#E03636] text-white hover:bg-red-400 duration-300 text-sm"
           type="submit"
         >
           {isSubmitting ? (
             <FontAwesomeIcon icon={faCircleNotch} className="w-3 h-3" spin />
           ) : (
-            "Save"
+            "Create bid"
           )}
         </button>
       </form>

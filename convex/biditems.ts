@@ -74,6 +74,27 @@ export const getBidItemByItemId = query({
   },
 });
 
+export const getSoldBidItems = query({
+  args: {},
+  handler: async ({ db }, {}) => {
+    return await db
+      .query("biditems")
+      .filter((q) => q.eq(q.field("isSold"), true))
+      .collect();
+  },
+});
+
+export const getLatestTwoSoldItems = query({
+  args: {},
+  handler: async ({ db }, {}) => {
+    return await db
+      .query("biditems")
+      .filter((q) => q.eq(q.field("isSold"), true))
+      .order("desc")
+      .take(2);
+  },
+});
+
 // export const getBidItemByItemIdAction: RegisteredAction<
 //   "public",
 //   { bidItemId: Id<"biditems"> },

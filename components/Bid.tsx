@@ -56,37 +56,37 @@ export const Bid = ({
   };
 
   return (
-    <div className="flex items-center justify-between text-sm px-5 bg-gray-100 py-2 rounded-md">
-      <p className="text-green-500 font-semibold show">{bid.bidAmount} USD</p>
+    <div className="flex items-center justify-between text-sm gap-x-1">
       <div
-        className="show cursor-pointer"
+        className="cursor-pointer w-1/2 flex items-center text-ellipsis text-xs"
         onClick={() => setUserProfileId!(bid.bidder)}
       >
-        <p className="text-xs">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={bidAuthor?.imageUrl}
+          alt=""
+          className="w-5 h-5 rounded-full mr-1"
+        />
+        <p className="text-xs text-[#545454]">
           {bidAuthor?.name}{" "}
           <span className="italic">
             {currentUserId === bid.bidder && "(you)"}{" "}
           </span>{" "}
         </p>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={bidAuthor?.imageUrl}
-          alt=""
-          className="w-7 h-7 rounded ml-auto"
-        />
       </div>
+      <p className="text-green-500 font-semibold w-1/4">{bid.bidAmount} USD</p>
       {isCurrentUsersItem && bid.status === "pending" ? (
-        <div className="flex">
+        <div className="flex w-1/4 justify-around">
           {isAccepting ? (
             <FontAwesomeIcon
               icon={faCircleNotch}
-              className="w-5 h-5 mr-2 text-green-500 cursor-pointer"
+              className="w-5 h-5 text-green-500 cursor-pointer"
               spin
             />
           ) : (
             <FontAwesomeIcon
               icon={faCircleCheck}
-              className="w-5 h-5 mr-2 text-green-500 cursor-pointer"
+              className="w-5 h-5 text-green-500 cursor-pointer"
               onClick={acceptBid}
             />
           )}
@@ -114,7 +114,7 @@ export const Bid = ({
               : bid.status === "outbid"
               ? "text-black"
               : "text-yellow-500"
-          }`}
+          } w-1/4`}
         >
           {bid.status}
         </p>

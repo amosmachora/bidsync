@@ -14,7 +14,7 @@ export const MessageSenderImage = ({
   const { setUserProfileId } = useGlobalData();
   return (
     <div
-      className={`w-4 h-4 outline outline-blue-500 outline-2 rounded-full relative overflow-clip mt-2 ${
+      className={`h-8 w-8 mr-5 rounded-full relative overflow-clip mt-2 ${
         userId && "cursor-pointer"
       }`}
       onClick={() => {
@@ -25,7 +25,11 @@ export const MessageSenderImage = ({
     >
       {senderImageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={senderImageUrl} alt={""} className="" />
+        <img
+          src={senderImageUrl}
+          alt={""}
+          className="h-full w-full rounded-full"
+        />
       ) : (
         <FontAwesomeIcon icon={faUser} className="w-2 h-2 center-absolutely" />
       )}

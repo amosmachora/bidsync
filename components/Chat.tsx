@@ -11,13 +11,14 @@ import { CurrentUserMessage } from "./CurrentUserMessage";
 import { NotCurrentUserMessage } from "./NotCurrentUserMessage";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
+import { Textarea } from "./ui/textarea";
 
 export const Chat = () => {
   const messages = useQuery(api.messages.getAllMessages);
   const currentUserId = useStoreUserEffect();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submitMessage = useMutation(api.messages.sendNewMessage);
-  const messageRef = useRef<HTMLInputElement | null>(null);
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
   const { openSignIn } = useClerk();
   const invincibleDiv = useRef<HTMLDivElement | null>(null);
   const userCount = useQuery(api.users.userCount);
@@ -46,12 +47,14 @@ export const Chat = () => {
     invincibleDiv.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  //temporarily
+  const filteredMessages = messages?.filter(
+    (message) => message.isAdminMessage || message.isWelcomingMessage
+  );
+
   return (
-    <div className="w-1/4 flex flex-col relative h-full show">
-      <p className="text-white bg-green-500 rounded-b-sm absolute top-o right-0 w-max p-3 text-xs z-50">
-        {userCount} AU
-      </p>
-      <ScrollArea className="show flex-grow h-[1px]">
+    <div className="flex-grow">
+      <ScrollArea className="flex-grow h-[40vh] relative">
         {messages?.map((message, i) => {
           const isCurrentUsersMessage = message.author === currentUserId;
           return message.isWelcomingMessage ? (
@@ -68,13 +71,12 @@ export const Chat = () => {
             />
           );
         })}
-        <div ref={invincibleDiv} />
+        <div ref={invincibleDiv} className="absolute bottom-0 show" />
       </ScrollArea>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="mt-5">
         <div className="flex relative">
-          <Input
-            className="w-full"
-            placeholder="Type your message here"
+          <Textarea
+            placeholder="Type your message here."
             name="message"
             ref={messageRef}
             required
@@ -86,7 +88,7 @@ export const Chat = () => {
             {isSubmitting ? (
               <FontAwesomeIcon icon={faCircleNotch} spin className="w-4 h-4" />
             ) : (
-              <FontAwesomeIcon icon={faPaperPlane} className="w-5 h-5" />
+              <FontAwesomeIcon icon={faPaperPlane} className="w-4 h-4" />
             )}
           </button>
         </div>

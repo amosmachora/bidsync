@@ -76,3 +76,15 @@ export const getStageItem = query({
     return await db.get(stageItemId);
   },
 });
+
+export const getNumberOfItemsOnStage = query({
+  args: {},
+  handler: async ({ db }) => {
+    return (
+      await db
+        .query("stageitems")
+        .filter((q) => q.eq(q.field("isOnStage"), true))
+        .collect()
+    ).length;
+  },
+});

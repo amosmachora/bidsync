@@ -46,11 +46,7 @@ export const MyItems = () => {
           {biditems
             ?.filter((bid) => !bid.isSold)
             ?.map((item) => (
-              <BidItem
-                item={item}
-                key={item._id}
-                addItemToStage={addItemToStage}
-              />
+              <BidItem item={item} key={item._id} />
             ))}
         </div>
         <h1 className="my-5 text-green-500 text-xl">sold items</h1>
@@ -58,11 +54,7 @@ export const MyItems = () => {
           {biditems
             ?.filter((bid) => bid.isSold)
             ?.map((item) => (
-              <BidItem
-                item={item}
-                key={item._id}
-                addItemToStage={addItemToStage}
-              />
+              <BidItem item={item} key={item._id} />
             ))}
         </div>
       </ScrollArea>

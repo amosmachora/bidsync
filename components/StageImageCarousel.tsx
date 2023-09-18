@@ -7,9 +7,11 @@ export const StageImageCarousel = ({
 }: {
   onStageBidItem?: BidItem | null;
 }) => {
+  const url = new URL(`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getImage`);
+  url.searchParams.set("storageId", onStageBidItem?.imageStorageIds?.at(0)!);
   return (
-    <div className="w-1/2 overflow-hidden flex flex-col h-full show">
-      <Carousel
+    <div className="w-1/2 overflow-hidden">
+      {/* <Carousel
         enableKeyboardControls
         wrapAround
         defaultControlsConfig={{
@@ -23,7 +25,6 @@ export const StageImageCarousel = ({
           getImageUrl.searchParams.set("storageId", id);
 
           return (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={getImageUrl.href}
               alt=""
@@ -32,12 +33,13 @@ export const StageImageCarousel = ({
             />
           );
         })}
-      </Carousel>
-      <div className="p-5">
-        <p>{onStageBidItem?.title}</p>
-        <p className="uppercase">{onStageBidItem?.price}</p>
-        <p>{onStageBidItem?.description}</p>
-      </div>
+      </Carousel> */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={url.href}
+        alt=""
+        className="w-full object-cover h-[30vh] my-auto rounded-md"
+      />
     </div>
   );
 };

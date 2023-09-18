@@ -10,7 +10,7 @@ export const Overlay = ({
 }) => {
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-30"
+      className="fixed inset-0 flex items-center justify-center z-20 backdrop-blur-sm bg-white/25"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

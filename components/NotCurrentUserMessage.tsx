@@ -16,12 +16,12 @@ export const NotCurrentUserMessage = ({
   });
 
   return (
-    <div className="bg-gray-500 text-white rounded-r-md w-max p-3 max-w-[50%] text-sm mb-2">
-      {message.body}
+    <div className="px-5 py-3 w-full border border-[#FFEFF2] rounded mb-2 flex items-center text-xs">
       <MessageSenderImage
         senderImageUrl={user?.imageUrl ?? null}
         userId={message.author ?? null}
       />
+      {message.body}
     </div>
   );
 };
