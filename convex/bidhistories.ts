@@ -60,6 +60,7 @@ export const acceptBid = mutation({
           isSuccessNotification: true,
           message: `Your bid of ${bid.bidAmount} was accepted`,
           target: bid.bidder,
+          isRead: false,
         },
       }
     );
@@ -78,9 +79,6 @@ export const acceptBid = mutation({
       .filter((q) => q.neq(q.field("status"), "declined"))
       .collect();
 
-    console.log(allOtherBids);
-    console.log(bid);
-
     for (const bid of allOtherBids) {
       await db.patch(bid._id, { isBidWinner: false, status: "outbid" });
       //push notification to losers
@@ -91,8 +89,9 @@ export const acceptBid = mutation({
           notification: {
             hasBeenShown: false,
             isSuccessNotification: false,
-            message: "You were outbid 😢",
+            message: "You were outbid :-(",
             target: bid.bidder,
+            isRead: false,
           },
         }
       );
@@ -122,6 +121,7 @@ export const declineBid = mutation({
         isSuccessNotification: false,
         message: `Your bid of ${bid.bidAmount} USD was denied`,
         target: bid.bidder,
+        isRead: false,
       },
     });
   },

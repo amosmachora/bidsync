@@ -12,9 +12,11 @@ export const Notifications = ({ close }: { close: () => void }) => {
   const userNotifications = useQuery(api.notifications.getAllNotifications, {
     userId: userId ?? undefined,
   });
-  const markNotificationAsShown = useMutation(
-    api.notifications.updateNotificationAsCompleted
+  const markNotificationAsRead = useMutation(
+    api.notifications.markNotificationAsRead
   );
+
+  console.log(userNotifications);
 
   return (
     <>
@@ -26,12 +28,12 @@ export const Notifications = ({ close }: { close: () => void }) => {
             className="flex items-center justify-between"
           >
             <p className="w-3/4 text-sm">{notification.message}</p>
-            {!notification.hasBeenShown && (
+            {!notification.isRead && (
               <FontAwesomeIcon
                 icon={faCheck}
                 className="w-5 h-5 text-green-600 cursor-pointer"
                 onClick={async () =>
-                  await markNotificationAsShown({
+                  await markNotificationAsRead({
                     notificationId: notification._id,
                   })
                 }

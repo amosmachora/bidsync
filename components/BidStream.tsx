@@ -1,4 +1,5 @@
 import { api } from "@/convex/_generated/api";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { minsAndSecs } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
@@ -9,17 +10,11 @@ import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 
 export const BidStream = () => {
-  // the item on stage
-  const onStageItem = useQuery(api.stageitems.getOnStageItem);
+  const { onStageItem } = useGlobalData();
+  const userId = useStoreUserEffect();
   const bidHistories = useQuery(api.bidhistories.getAllBidsByStageItemId, {
     stageItemId: onStageItem?._id,
   });
-
-  const userId = useStoreUserEffect();
-
-  const [removeFromStageCountDown, setRemoveFromStageCountDown] = useState<
-    number | null
-  >(null);
 
   return (
     <div className="px-[2%] flex-grow flex flex-col h-full">
@@ -62,7 +57,6 @@ export const BidStream = () => {
                 bid={bid}
                 key={i}
                 isCurrentUsersItem={onStageItem?.author === userId}
-                setRemoveFromStageCountDown={setRemoveFromStageCountDown}
               />
             ))
           ) : (

@@ -13,25 +13,22 @@ const crons = cronJobs();
 export const decreaseStageTime = internalMutation({
   args: {},
   handler: async ({ db }, {}) => {
-    const onStageItem = await db
+    const onStageItems = await db
       .query("stageitems")
       .filter((q) => {
         return q.eq(q.field("isOnStage"), true);
       })
-      .first();
+      .collect();
 
-    if (!onStageItem) {
-      return null;
+    for (const onStageItem of onStageItems) {
+      if (onStageItem.onStageDuration! <= 0) {
+        await db.patch(onStageItem._id, { isOnStage: false });
+        return;
+      }
+      await db.patch(onStageItem?._id, {
+        onStageDuration: onStageItem.onStageDuration! - 1,
+      });
     }
-
-    if (onStageItem.onStageDuration! <= 0) {
-      await db.patch(onStageItem._id, { isOnStage: false });
-      return;
-    }
-
-    await db.patch(onStageItem?._id, {
-      onStageDuration: onStageItem.onStageDuration! - 1,
-    });
   },
 });
 

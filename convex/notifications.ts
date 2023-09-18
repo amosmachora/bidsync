@@ -28,11 +28,34 @@ export const getAllUnShownNotifications = query({
   },
 });
 
+export const getAllUnreadNotifications = query({
+  args: { userId: v.optional(v.id("users")) },
+  handler: async ({ db }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
+
+    return db
+      .query("notifications")
+      .filter((q) => q.eq(q.field("isRead"), false))
+      .filter((q) => q.eq(q.field("target"), userId))
+      .collect();
+  },
+});
+
 // or read. Was a bit tired writing this function
-export const updateNotificationAsCompleted = mutation({
+export const markNotificationAsShown = mutation({
   args: { notificationId: v.id("notifications") },
   handler: async ({ db }, { notificationId }) => {
     return await db.patch(notificationId, { hasBeenShown: true });
+  },
+});
+
+export const markNotificationAsRead = mutation({
+  args: { notificationId: v.id("notifications") },
+  handler: async ({ db }, { notificationId }) => {
+    console.log(notificationId);
+    return await db.patch(notificationId, { isRead: true });
   },
 });
 
@@ -43,6 +66,7 @@ export const createInternalNotification = internalMutation({
       isSuccessNotification: v.boolean(),
       hasBeenShown: v.boolean(),
       message: v.string(),
+      isRead: v.boolean(),
     }),
   },
   handler: async ({ db }, { notification }) => {
@@ -57,6 +81,7 @@ export const createInternalNotificationAction = action({
       isSuccessNotification: v.boolean(),
       hasBeenShown: v.boolean(),
       message: v.string(),
+      isRead: v.boolean(),
     }),
   },
   handler: async ({ runMutation }, { notification }) => {

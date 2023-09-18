@@ -47,14 +47,9 @@ export const Chat = () => {
     invincibleDiv.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  //temporarily
-  const filteredMessages = messages?.filter(
-    (message) => message.isAdminMessage || message.isWelcomingMessage
-  );
-
   return (
-    <div className="flex-grow">
-      <ScrollArea className="flex-grow h-[40vh] relative">
+    <div className="flex-grow flex flex-col">
+      <ScrollArea className="flex-grow h-[0px]">
         {messages?.map((message, i) => {
           const isCurrentUsersMessage = message.author === currentUserId;
           return message.isWelcomingMessage ? (
@@ -71,7 +66,7 @@ export const Chat = () => {
             />
           );
         })}
-        <div ref={invincibleDiv} className="absolute bottom-0 show" />
+        <div ref={invincibleDiv} />
       </ScrollArea>
       <form onSubmit={handleSubmit} className="mt-5">
         <div className="flex relative">

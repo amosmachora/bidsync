@@ -1,5 +1,6 @@
 import { removeItemFromStage } from "@/convex/stageitems";
 import { api } from "@/convex/_generated/api";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { minsAndSecs } from "@/lib/utils";
 import { useQuery, useMutation } from "convex/react";
@@ -9,7 +10,8 @@ import { Button } from "./ui/button";
 
 export const StageAction = () => {
   // the item on stage
-  const onStageItem = useQuery(api.stageitems.getOnStageItem);
+  const { onStageItem, removeFromStageCountDown, setRemoveFromStageCountDown } =
+    useGlobalData();
   const removeItemFromStage = useMutation(api.stageitems.removeItemFromStage);
 
   // the actual item
@@ -21,9 +23,6 @@ export const StageAction = () => {
   const isCurrentUsersItemBeingBidOn: boolean =
     userId === onStageBidItem?.author;
 
-  const [removeFromStageCountDown, setRemoveFromStageCountDown] = useState<
-    number | null
-  >(null);
   const [isShowingMakeBidModal, setIsShowingMakeBidModal] = useState(false);
 
   const bidHistories = useQuery(api.bidhistories.getAllBidsByStageItemId, {
@@ -31,17 +30,24 @@ export const StageAction = () => {
   });
 
   useEffect(() => {
-    if (removeFromStageCountDown === 0) {
+    if (removeFromStageCountDown?.value === 0) {
       // This should probably be an internal mutation
       removeItemFromStage({ stageItemId: onStageItem?._id! });
     }
     if (removeFromStageCountDown) {
       const id = setInterval(() => {
-        setRemoveFromStageCountDown((prev) => (prev ? prev - 1 : null));
+        setRemoveFromStageCountDown((prev) =>
+          prev?.value ? { ...prev, value: prev.value - 1 } : null
+        );
       }, 1000);
       return () => clearInterval(id);
     }
-  }, [onStageItem?._id, removeFromStageCountDown, removeItemFromStage]);
+  }, [
+    onStageItem?._id,
+    removeFromStageCountDown,
+    removeItemFromStage,
+    setRemoveFromStageCountDown,
+  ]);
 
   return (
     <>
@@ -60,7 +66,8 @@ export const StageAction = () => {
           }
         >
           Remove item from stage{" "}
-          {removeFromStageCountDown && minsAndSecs(removeFromStageCountDown)}
+          {removeFromStageCountDown?.id === onStageItem?._id &&
+            minsAndSecs(removeFromStageCountDown?.value ?? undefined)}
         </Button>
       )}
       {isShowingMakeBidModal && (

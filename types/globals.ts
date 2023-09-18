@@ -18,6 +18,7 @@ export type Notification = {
   isSuccessNotification: boolean;
   hasBeenShown: boolean;
   message: string;
+  isRead: boolean;
 };
 
 export type BidHistory = {

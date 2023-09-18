@@ -35,29 +35,38 @@ const UserProfileData = () => {
   return (
     <>
       <Overlay close={close}>
-        <form className="gap-y-5 flex flex-col fixed top-1/2 z-50 -translate-y-1/2 rounded-md bg-white p-[3%] w-10/12 sm:w-1/2 left-1/2 -translate-x-1/2 shadow-md">
+        <form className="gap-y-5 flex flex-col fixed top-1/2 z-50 -translate-y-1/2 rounded-md bg-white p-[3%] w-10/12 sm:w-1/2 left-1/2 -translate-x-1/2 shadow-lg shadow-red-200">
           <FontAwesomeIcon
             icon={faXmark}
-            className="h-5 w-5 text-blue-600 ml-auto cursor-pointer absolute top-5 right-5"
+            className="h-5 w-5 ml-auto cursor-pointer absolute top-5 right-5"
             onClick={close}
           />
-          <div className="flex justify-between">
+          <p className="font-semibold text-2xl">Bid History</p>
+          <div className="flex items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={user?.imageUrl}
+              alt=""
+              className="w-10 h-10 rounded-full mr-2"
+            />
             <p>{user?.name}</p>
+          </div>
+          <div className="flex text-sm text-[#9B9B9B] justify-between w-2/3">
             <p>{numberOfWonBids} won bids</p>
             <p>{numberOfOutbidBids} outbid bids</p>
             <p>{numberOfDeclinedBids} declined bids</p>
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={user?.imageUrl} alt="" className="w-10 h-10 rounded-full" />
-          <p>Bid History</p>
-          <div className="flex justify-between">
+          <div className="flex justify-between mt-5">
             <p className="w-1/4">Amount</p>
             <p className="w-1/4 text-left">Won Bid?</p>
             <p className="w-1/4">Status</p>
           </div>
           <ScrollArea className="h-[50vh] flex flex-col gap-y-4">
             {userBidHistory?.map((bid) => (
-              <div key={bid._id} className="flex justify-between">
+              <div
+                key={bid._id}
+                className="flex justify-between border-y border-[#E9E9E9] py-2"
+              >
                 <p className="w-1/4">{bid.bidAmount} USD</p>
                 <p className="w-1/4 text-left">
                   {bid.isBidWinner ? "true" : "false"}

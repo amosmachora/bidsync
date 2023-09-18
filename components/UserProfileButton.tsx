@@ -15,7 +15,7 @@ export const UserProfileButton = () => {
 
   const userId = useStoreUserEffect();
   const userNotifications = useQuery(
-    api.notifications.getAllUnShownNotifications,
+    api.notifications.getAllUnreadNotifications,
     { userId: userId ?? undefined }
   );
   return (

@@ -17,13 +17,9 @@ import { toast } from "react-toastify";
 export const Bid = ({
   bid,
   isCurrentUsersItem,
-  setRemoveFromStageCountDown,
 }: {
   bid: BidHistory;
   isCurrentUsersItem: boolean;
-  setRemoveFromStageCountDown: React.Dispatch<
-    React.SetStateAction<number | null>
-  >;
 }) => {
   //bid author
   const bidAuthor = useQuery(api.users.getUser, { userId: bid.bidder });
@@ -31,10 +27,10 @@ export const Bid = ({
   const declineBidMutation = useMutation(api.bidhistories.declineBid);
 
   const currentUserId = useStoreUserEffect();
+  const { setUserProfileId, setRemoveFromStageCountDown } = useGlobalData();
 
   const [isAccepting, setIsAccepting] = useState(false);
   const [isDeclining, setIsDeclining] = useState(false);
-  const { setUserProfileId } = useGlobalData();
 
   const acceptBid = async () => {
     setIsAccepting(true);
@@ -43,7 +39,7 @@ export const Bid = ({
     toast.success(
       `You have accepted ${bidAuthor?.name}'s bid of ${bid.bidAmount} USD`
     );
-    setRemoveFromStageCountDown(300);
+    setRemoveFromStageCountDown({ id: bid.stageItem, value: 300 });
   };
 
   const declineBid = async () => {
@@ -56,7 +52,7 @@ export const Bid = ({
   };
 
   return (
-    <div className="flex items-center justify-between text-sm gap-x-1">
+    <div className="flex items-center justify-between text-sm gap-x-1 mb-3">
       <div
         className="cursor-pointer w-1/2 flex items-center text-ellipsis text-xs"
         onClick={() => setUserProfileId!(bid.bidder)}

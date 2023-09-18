@@ -8,17 +8,17 @@ import {
   query,
 } from "./_generated/server";
 
-export const getOnStageItem = query({
+export const getOnStageItems = query({
   args: {},
   handler: async ({ db }, args) => {
-    const stageItem = await db
+    const stageItems = await db
       .query("stageitems")
       .filter((q) => {
         return q.eq(q.field("isOnStage"), true);
       })
-      .first();
+      .collect();
 
-    return stageItem;
+    return stageItems;
   },
 });
 

@@ -1,5 +1,6 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useGlobalData } from "@/hooks/useGlobalData";
 import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { minsAndSecs } from "@/lib/utils";
 import { BidHistory } from "@/types/globals";
@@ -21,10 +22,9 @@ export const MakeBidModal = ({
   latestBid?: BidHistory;
 }) => {
   const userId = useStoreUserEffect();
-  const makeBidMutation = useMutation(api.bidhistories.makeBid);
-  const onStageItem = useQuery(api.stageitems.getOnStageItem);
+  const { onStageItem } = useGlobalData();
 
-  // the bid item
+  const makeBidMutation = useMutation(api.bidhistories.makeBid);
   const onStageBidItem = useQuery(api.biditems.getBidItemByItemId, {
     bidItemId: onStageItem?.bidItemId,
   });

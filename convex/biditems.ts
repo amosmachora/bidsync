@@ -95,6 +95,17 @@ export const getLatestTwoSoldItems = query({
   },
 });
 
+export const getAllSoldItems = query({
+  args: {},
+  handler: async ({ db }, {}) => {
+    return await db
+      .query("biditems")
+      .filter((q) => q.eq(q.field("isSold"), true))
+      .order("desc")
+      .collect();
+  },
+});
+
 // export const getBidItemByItemIdAction: RegisteredAction<
 //   "public",
 //   { bidItemId: Id<"biditems"> },

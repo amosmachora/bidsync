@@ -32,6 +32,7 @@ export default defineSchema({
     isSuccessNotification: v.boolean(),
     hasBeenShown: v.boolean(),
     message: v.string(),
+    isRead: v.boolean(),
   }),
   bidhistories: defineTable({
     isBidWinner: v.optional(v.boolean()),
