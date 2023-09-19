@@ -4,11 +4,11 @@ import { internalMutation } from "./_generated/server";
 
 const crons = cronJobs();
 
-crons.interval(
-  "decrease stage time",
-  { seconds: 1 },
-  internal.crons.decreaseStageTime
-);
+// crons.interval(
+//   "decrease stage time",
+//   { seconds: 1 },
+//   internal.crons.decreaseStageTime
+// );
 
 export const decreaseStageTime = internalMutation({
   args: {},

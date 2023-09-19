@@ -41,6 +41,7 @@ export const BidItem = ({
 
   const addBidItemToStage = useMutation(api.stageitems.addBidItemToStage);
   const userId = useStoreUserEffect();
+  const { setStartCountDown } = useGlobalData();
 
   useEffect(() => {
     const firstStorageId = item.imageStorageIds?.at(0);
@@ -68,6 +69,8 @@ export const BidItem = ({
       authorId: userId!,
     });
     setIsSubmitting(false);
+
+    setStartCountDown(true);
   };
 
   return (

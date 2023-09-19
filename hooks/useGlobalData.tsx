@@ -2,8 +2,8 @@
 
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
-import React from "react";
+import { useMutation, useQuery } from "convex/react";
+import React, { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 
 type GlobalData = {
@@ -33,6 +33,7 @@ type GlobalData = {
   } | null;
   textingToUserId: Id<"users"> | null;
   setTextingToUserId: React.Dispatch<React.SetStateAction<Id<"users"> | null>>;
+  setStartCountDown: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const globalDataContext = createContext<GlobalData>({
@@ -47,6 +48,7 @@ export const globalDataContext = createContext<GlobalData>({
   setRemoveFromStageCountDown: () => {},
   textingToUserId: null,
   setTextingToUserId: () => {},
+  setStartCountDown: () => {},
 });
 
 export const GlobalDataProvider = ({
@@ -65,9 +67,24 @@ export const GlobalDataProvider = ({
   const [textingToUserId, setTextingToUserId] = useState<Id<"users"> | null>(
     null
   );
-
   const onStageItems = useQuery(api.stageitems.getOnStageItems);
   const onStageItem = onStageItems?.at(currentItemIdx);
+  const decreaseStageTime = useMutation(api.stageitems.decreaseStageTime);
+
+  const [startCountDown, setStartCountDown] = useState(false);
+
+  useEffect(() => {
+    if (startCountDown) {
+      const id = setInterval(() => {
+        const nullValue = decreaseStageTime();
+        if (!nullValue) {
+          setStartCountDown(false);
+        }
+      }, 1000);
+
+      return () => clearInterval(id);
+    }
+  }, [decreaseStageTime, startCountDown]);
 
   return (
     <globalDataContext.Provider
@@ -83,6 +100,7 @@ export const GlobalDataProvider = ({
         setRemoveFromStageCountDown,
         setTextingToUserId,
         textingToUserId,
+        setStartCountDown,
       }}
     >
       {children}

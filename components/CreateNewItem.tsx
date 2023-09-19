@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Id } from "@/convex/_generated/dataModel";
+import { useGlobalData } from "@/hooks/useGlobalData";
 
 export const NewItemCreator = ({ close }: { close: () => void }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +38,7 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
   const addBidItemToStage = useMutation(api.stageitems.addBidItemToStage);
 
   const userId = useStoreUserEffect();
+  const { setStartCountDown } = useGlobalData();
 
   useEffect(() => {
     const loadImages = async () => {
@@ -136,6 +138,7 @@ export const NewItemCreator = ({ close }: { close: () => void }) => {
       onStageDuration: onStageDuration!,
       authorId: userId!,
     });
+    setStartCountDown(true);
   };
 
   return (

@@ -59,22 +59,24 @@ export const StageImageCarousel = ({
                 );
               })}
             </Carousel>
-            {onStageBidItem?.imageStorageIds?.map((id) => {
-              const getImageUrl = new URL(
-                `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getImage`
-              );
-              getImageUrl.searchParams.set("storageId", id);
+            <div className="flex gap-x-4 items-center">
+              {onStageBidItem?.imageStorageIds?.map((id) => {
+                const getImageUrl = new URL(
+                  `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getImage`
+                );
+                getImageUrl.searchParams.set("storageId", id);
 
-              return (
-                //  eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={getImageUrl.href}
-                  alt=""
-                  key={id}
-                  className="w-20 aspect-square rounded mt-5 object-cover mx-auto cursor-pointer"
-                />
-              );
-            })}
+                return (
+                  //  eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={getImageUrl.href}
+                    alt=""
+                    key={id}
+                    className="w-20 aspect-square rounded mt-5 object-cover mx-auto cursor-pointer"
+                  />
+                );
+              })}
+            </div>
           </div>
         </Overlay>
       )}

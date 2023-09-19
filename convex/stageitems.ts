@@ -88,3 +88,29 @@ export const getNumberOfItemsOnStage = query({
     ).length;
   },
 });
+
+export const decreaseStageTime = mutation({
+  args: {},
+  handler: async ({ db }, {}) => {
+    const onStageItems = await db
+      .query("stageitems")
+      .filter((q) => {
+        return q.eq(q.field("isOnStage"), true);
+      })
+      .collect();
+
+    if (onStageItems.length < 1) {
+      return null;
+    }
+
+    for (const onStageItem of onStageItems) {
+      if (onStageItem.onStageDuration! <= 0) {
+        await db.patch(onStageItem._id, { isOnStage: false });
+        return;
+      }
+      await db.patch(onStageItem?._id, {
+        onStageDuration: onStageItem.onStageDuration! - 1,
+      });
+    }
+  },
+});
