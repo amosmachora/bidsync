@@ -57,7 +57,7 @@ const UserProfileData = () => {
             <FontAwesomeIcon
               icon={faMessage}
               className="h-5 w-5 text-green-500 ml-5 cursor-pointer"
-              onClick={() => setTextingToUserId(user?._id)}
+              onClick={() => setTextingToUserId(user?._id!)}
             />
           </div>
           <div className="flex text-sm text-[#9B9B9B] justify-between w-2/3">
