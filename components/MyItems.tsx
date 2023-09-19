@@ -1,71 +1,31 @@
 import { api } from "@/convex/_generated/api";
-import useStoreUserEffect from "@/hooks/useStoreUserEffect";
-import { BidItem as BidItemType } from "@/types/globals";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "convex/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { BidItem } from "./BidItem";
-import { NewItemCreator } from "./CreateNewItem";
-import { ScrollArea } from "./ui/scroll-area";
-import { UserConsentModal } from "./UserConsentModal";
+import { WholeAppBidHistory } from "./WholeAppBidHistory";
 
 export const MyItems = () => {
-  const [showItemCreatorModal, setShowItemCreatorModal] = useState(false);
-  const [itemToBeAddedToStage, setItemToBeAddedToStage] =
-    useState<BidItemType | null>(null);
-
-  const [isShowingUserConsentModal, setIsShowingUserConsentModal] =
-    useState(false);
-
-  const userId = useStoreUserEffect();
-
-  const biditems = useQuery(api.biditems.getBidItemsByUserId, {
-    userId: userId ?? undefined,
-  });
-
-  const addItemToStage = (bidItem: BidItemType) => {
-    setItemToBeAddedToStage(bidItem);
-    setIsShowingUserConsentModal(true);
-  };
+  const bidItems = useQuery(api.biditems.getLatestTwoSoldItems);
+  const [isShowingBidHistory, setIsShowingBidHistory] = useState(false);
 
   return (
-    <div className="w-1/4 p-[2%] flex flex-col">
-      <p className="mb-3">My Bid Items</p>
-      <ScrollArea className="flex-grow h-[1px]">
-        <div className="grid grid-cols-2 gap-4">
-          <div
-            className="aspect-square border rounded relative border-blue-600 cursor-pointer hover:scale-105 transition-all duration-200"
-            onClick={() => setShowItemCreatorModal(true)}
-          >
-            <FontAwesomeIcon
-              icon={faPlus}
-              className="h-5 w-5 text-blue-600 center-absolutely"
-            />
-          </div>
-          {biditems
-            ?.filter((bid) => !bid.isSold)
-            ?.map((item) => (
-              <BidItem item={item} key={item._id} />
-            ))}
-        </div>
-        <h1 className="my-5 text-green-500 text-xl">sold items</h1>
-        <div className="grid grid-cols-2 gap-4">
-          {biditems
-            ?.filter((bid) => bid.isSold)
-            ?.map((item) => (
-              <BidItem item={item} key={item._id} />
-            ))}
-        </div>
-      </ScrollArea>
-      {showItemCreatorModal && (
-        <NewItemCreator close={() => setShowItemCreatorModal(false)} />
-      )}
-      {isShowingUserConsentModal && (
-        <UserConsentModal
-          close={() => setIsShowingUserConsentModal(false)}
-          bidItem={itemToBeAddedToStage!}
-        />
+    <div>
+      <div className="flex justify-between">
+        <p className="font-semibold">Sold Items</p>
+        <p
+          className="text-sm text-red-500 cursor-pointer"
+          // onClick={() => setIsShowingBidHistory(true)}
+        >
+          See all
+        </p>
+      </div>
+      <div className="flex gap-x-5">
+        {bidItems?.map((item) => (
+          <BidItem item={item} key={item._id} minimized />
+        ))}
+      </div>
+      {isShowingBidHistory && (
+        <WholeAppBidHistory close={() => setIsShowingBidHistory(false)} />
       )}
     </div>
   );

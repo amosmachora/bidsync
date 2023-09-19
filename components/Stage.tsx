@@ -15,13 +15,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGlobalData } from "@/hooks/useGlobalData";
 
 export const Stage = () => {
-  const { setIsShowingAddBidItemModal, currentItemIdx, setCurrentItemIdx } =
-    useGlobalData();
+  const {
+    setIsShowingAddBidItemModal,
+    currentItemIdx,
+    setCurrentItemIdx,
+    onStageItem,
+    setUserProfileId,
+  } = useGlobalData();
   const currentUserId = useStoreUserEffect();
 
-  const onStageItems = useQuery(api.stageitems.getOnStageItems);
+  const stageItemAuthor = useQuery(api.users.getUser, {
+    userId: onStageItem?.author,
+  });
+
   const onStageBidItem = useQuery(api.biditems.getBidItemByItemId, {
-    bidItemId: onStageItems?.at(currentItemIdx)?.bidItemId,
+    bidItemId: onStageItem?.bidItemId,
   });
   const numberOfOnStageItems = useQuery(api.stageitems.getNumberOfItemsOnStage);
   const allUnShownNotifications = useQuery(
@@ -52,6 +60,8 @@ export const Stage = () => {
     }
   }, [allUnShownNotifications, currentUserId, markNotificationAsShown]);
 
+  console.log(currentItemIdx);
+
   return (
     <div className="w-full relative">
       <div className="flex justify-between items-center">
@@ -63,8 +73,8 @@ export const Stage = () => {
             viewBox="0 0 10 18"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className={`cursor-pointer ${
-              currentItemIdx === 0 && "cursor-not-allowed"
+            className={`${
+              currentItemIdx === 0 ? "cursor-not-allowed" : "cursor-pointer"
             }`}
             onClick={() => {
               if (currentItemIdx !== 0) {
@@ -86,9 +96,10 @@ export const Stage = () => {
             viewBox="0 0 10 18"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className={`cursor-pointer ${
-              currentItemIdx + 1 === numberOfOnStageItems &&
-              "cursor-not-allowed"
+            className={`${
+              currentItemIdx + 1 === numberOfOnStageItems || !onStageItem
+                ? "cursor-not-allowed"
+                : "cursor-pointer "
             }`}
             onClick={() => {
               if (currentItemIdx + 1 !== numberOfOnStageItems) {
@@ -103,13 +114,23 @@ export const Stage = () => {
           </svg>
         </div>
       </div>
-      {onStageItems?.at(currentItemIdx) ? (
+      {onStageItem ? (
         <div className="flex bg-white mt-2 p-5 rounded-md justify-between gap-x-3">
           <StageImageCarousel onStageBidItem={onStageBidItem} />
           <div className="w-1/2 flex flex-col">
-            <p className="font-medium text-[#545454]">
-              {onStageBidItem?.title}
-            </p>
+            <div
+              className="flex text-sm mb-5 text-[#545454] cursor-pointer"
+              onClick={() => setUserProfileId(stageItemAuthor?._id ?? null)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={stageItemAuthor?.imageUrl}
+                alt=""
+                className="w-5 h-5 rounded-full mr-1"
+              />
+              <p>{stageItemAuthor?.name}</p>
+            </div>
+            <p className="font-medium">{onStageBidItem?.title}</p>
             <p className="uppercase font-bold text-2xl">
               {onStageBidItem?.price}{" "}
               {!onStageBidItem?.price.includes("usd") &&

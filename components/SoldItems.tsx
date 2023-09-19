@@ -8,7 +8,7 @@ export const SoldItems = () => {
   const bidItems = useQuery(api.biditems.getLatestTwoSoldItems);
   const [isShowingBidHistory, setIsShowingBidHistory] = useState(false);
   return (
-    <div className="mt-5">
+    <div>
       <div className="flex justify-between">
         <p className="font-semibold">Sold Items</p>
         <p

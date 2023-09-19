@@ -17,9 +17,9 @@ export const BidStream = () => {
   });
 
   return (
-    <div className="px-[2%] flex-grow flex flex-col h-full">
+    <div className="px-[2%] flex-grow flex flex-col">
       <p className="font-semibold mb-2">Bid Stream</p>
-      <div className="bg-white rounded-md p-5 h-full">
+      <div className="bg-white rounded-md p-5 flex-grow flex flex-col">
         <div className="text-[#9B9B9B] text-center">
           <p className="mb-2 text-2xl">
             {minsAndSecs(onStageItem?.onStageDuration)}
@@ -50,7 +50,7 @@ export const BidStream = () => {
           <p className="w-1/4">Amount</p>
           <p className="w-1/4">Action</p>
         </div>
-        <ScrollArea className="h-full">
+        <ScrollArea className="flex-grow h-[0px]">
           {bidHistories?.length! > 0 ? (
             bidHistories?.map((bid, i) => (
               <Bid

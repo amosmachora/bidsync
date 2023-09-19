@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Poppins } from "next/font/google";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { NewItemCreator } from "@/components/CreateNewItem";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { MyItems } from "@/components/MyItems";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -44,12 +46,13 @@ export default function Home() {
           <Chat />
         </div>
       </div>
-      <div className="w-4/5 px-[3%] flex flex-col">
+      <div className="w-4/5 px-[3%] flex flex-col flex-grow">
         <Navbar />
-        <div className="flex py-4 gap-x-4">
-          <div className="w-3/5">
+        <div className="flex flex-grow py-4 gap-x-4">
+          <div className="w-3/5 flex flex-col gap-y-4">
             <Stage />
             <SoldItems />
+            <MyItems />
           </div>
           <BidStream />
         </div>
