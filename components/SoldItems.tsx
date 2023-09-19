@@ -8,9 +8,9 @@ export const SoldItems = () => {
   const bidItems = useQuery(api.biditems.getLatestTwoSoldItems);
   const [isShowingBidHistory, setIsShowingBidHistory] = useState(false);
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-between">
-        <p className="font-semibold">Sold Items</p>
+        <p className="font-semibold">Todays sold items</p>
         <p
           className="text-sm text-red-500 cursor-pointer"
           onClick={() => setIsShowingBidHistory(true)}
@@ -24,7 +24,10 @@ export const SoldItems = () => {
         ))}
       </div>
       {isShowingBidHistory && (
-        <WholeAppBidHistory close={() => setIsShowingBidHistory(false)} />
+        <WholeAppBidHistory
+          close={() => setIsShowingBidHistory(false)}
+          type="all-items"
+        />
       )}
     </div>
   );

@@ -57,24 +57,24 @@ export const MakeBidModal = ({
       >
         <FontAwesomeIcon
           icon={faXmark}
-          className="h-5 w-5 text-blue-600 ml-auto cursor-pointer absolute top-5 right-5"
+          className="h-5 w-5 ml-auto cursor-pointer absolute top-5 right-5"
           onClick={close}
         />
         <p>Latest bid: {latestBid ? latestBid.bidAmount : "Not bid yet"}</p>
         <p>{minsAndSecs(onStageItem?.onStageDuration)} remaining!</p>
-        <p>Original price: {onStageBidItem?.price}</p>
-        <div className="w-1/2 mx-auto mt-5">
+        <p>Original price: {onStageBidItem?.price.toLocaleUpperCase()}</p>
+        <div className="w-2/3 mx-auto mt-5">
           <Input
             type="number"
             placeholder="enter bid amount"
             name="bid-amount"
             required
           />
-          <Button className="bg-blue-500 hover:bg-blue-400 w-full mt-3">
+          <Button className="bg-[#E03636] hover:bg-red-400 w-full mt-3">
             {isSubmitting ? (
               <FontAwesomeIcon icon={faCircleNotch} className="w-3 h-3" spin />
             ) : (
-              "Bid 🎊"
+              "bid"
             )}
           </Button>
         </div>

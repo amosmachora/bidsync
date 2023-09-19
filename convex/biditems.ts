@@ -95,6 +95,21 @@ export const getLatestTwoSoldItems = query({
   },
 });
 
+export const getLatestTwoSoldItemsFilteredByUser = query({
+  args: { userId: v.optional(v.id("users")) },
+  handler: async ({ db }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
+    return await db
+      .query("biditems")
+      .filter((q) => q.eq(q.field("author"), userId))
+      .filter((q) => q.eq(q.field("isSold"), true))
+      .order("desc")
+      .take(2);
+  },
+});
+
 export const getAllSoldItems = query({
   args: {},
   handler: async ({ db }, {}) => {

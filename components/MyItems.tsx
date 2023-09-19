@@ -1,20 +1,24 @@
 import { api } from "@/convex/_generated/api";
+import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 import { useQuery } from "convex/react";
 import React, { useState } from "react";
 import { BidItem } from "./BidItem";
 import { WholeAppBidHistory } from "./WholeAppBidHistory";
 
 export const MyItems = () => {
-  const bidItems = useQuery(api.biditems.getLatestTwoSoldItems);
+  const userId = useStoreUserEffect();
+  const bidItems = useQuery(api.biditems.getLatestTwoSoldItemsFilteredByUser, {
+    userId: userId ?? undefined,
+  });
   const [isShowingBidHistory, setIsShowingBidHistory] = useState(false);
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-between">
-        <p className="font-semibold">Sold Items</p>
+        <p className="font-semibold">Your Items</p>
         <p
           className="text-sm text-red-500 cursor-pointer"
-          // onClick={() => setIsShowingBidHistory(true)}
+          onClick={() => setIsShowingBidHistory(true)}
         >
           See all
         </p>
@@ -25,7 +29,10 @@ export const MyItems = () => {
         ))}
       </div>
       {isShowingBidHistory && (
-        <WholeAppBidHistory close={() => setIsShowingBidHistory(false)} />
+        <WholeAppBidHistory
+          close={() => setIsShowingBidHistory(false)}
+          type="my-items"
+        />
       )}
     </div>
   );

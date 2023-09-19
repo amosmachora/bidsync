@@ -29,11 +29,9 @@ import useStoreUserEffect from "@/hooks/useStoreUserEffect";
 export const BidItem = ({
   item,
   minimized,
-  reAddToStage,
 }: {
   item: BidItemType;
   minimized?: boolean;
-  reAddToStage?: boolean;
 }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isShowingItemHistory, setIsShowingItemHistory] = useState(false);
@@ -94,12 +92,12 @@ export const BidItem = ({
           {!item.price.includes("usd") && !item.price.includes("USD") && "USD"}
         </p>
       </div>
-      {reAddToStage && (
+      {item.author === userId && !minimized && (
         <p
-          className="absolute left-3 bottom-3 text-green-500"
+          className="absolute left-3 bottom-3 text-green-500 mt-5"
           onClick={() => setIsReAddingItemToStage(true)}
         >
-          Add to stage
+          Restage
         </p>
       )}
       {item.isSold && (

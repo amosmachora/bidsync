@@ -1,7 +1,7 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useGlobalData } from "@/hooks/useGlobalData";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faMessage, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "convex/react";
 import React from "react";
@@ -50,6 +50,10 @@ const UserProfileData = () => {
               className="w-10 h-10 rounded-full mr-2"
             />
             <p>{user?.name}</p>
+            {/* <FontAwesomeIcon
+              icon={faMessage}
+              className="h-5 w-5 text-green-500 ml-5 cursor-pointer"
+            /> */}
           </div>
           <div className="flex text-sm text-[#9B9B9B] justify-between w-2/3">
             <p>{numberOfWonBids} won bids</p>
