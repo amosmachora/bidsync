@@ -30,8 +30,8 @@ export const UserProfileButton = () => {
         <FontAwesomeIcon icon={faBell} className="w-4 h-4" />
       </div>
       <div
-        className="flex items-center"
-        onClick={() => setIsShowingLogOutButton(false)}
+        className="flex items-center cursor-pointer"
+        onClick={() => setIsShowingLogOutButton(true)}
       >
         {user?.hasImage ? (
           // eslint-disable-next-line @next/next/no-img-element

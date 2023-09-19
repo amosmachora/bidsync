@@ -22,7 +22,7 @@ export const Navbar = () => {
       ) : isAuthenticated ? (
         <UserProfileButton />
       ) : (
-        <div className="show px-4 py-2">
+        <div className="show px-4 py-2 ml-auto">
           <SignInButton mode="modal" />
         </div>
       )}

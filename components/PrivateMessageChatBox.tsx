@@ -154,7 +154,7 @@ export const PrivateMessageChatBox = () => {
             />
           </svg>
         </div>
-        <div className="bg-white p-5 flex-grow flex flex-col gap-y-5">
+        <div className="bg-white p-5 flex-grow flex flex-col gap-y-8">
           {chatRoomMessages?.map((message) => {
             if (message.sender === userId) {
               return (
