@@ -16,10 +16,12 @@ import type {
 } from "convex/server";
 import type * as bidhistories from "../bidhistories";
 import type * as biditems from "../biditems";
+import type * as chats from "../chats";
 import type * as crons from "../crons";
 import type * as http from "../http";
 import type * as messages from "../messages";
 import type * as notifications from "../notifications";
+import type * as privatemessages from "../privatemessages";
 import type * as stageitems from "../stageitems";
 import type * as users from "../users";
 
@@ -34,10 +36,12 @@ import type * as users from "../users";
 declare const fullApi: ApiFromModules<{
   bidhistories: typeof bidhistories;
   biditems: typeof biditems;
+  chats: typeof chats;
   crons: typeof crons;
   http: typeof http;
   messages: typeof messages;
   notifications: typeof notifications;
+  privatemessages: typeof privatemessages;
   stageitems: typeof stageitems;
   users: typeof users;
 }>;

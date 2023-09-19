@@ -42,4 +42,14 @@ export default defineSchema({
     stageItem: v.id("stageitems"),
     status: v.string(),
   }),
+  privatemessages: defineTable({
+    sender: v.id("users"),
+    receiver: v.id("users"),
+    message: v.string(),
+    chatId: v.id("chats"),
+    isRead: v.boolean(),
+  }),
+  chats: defineTable({
+    participants: v.array(v.id("users")),
+  }),
 });

@@ -9,7 +9,11 @@ import { Overlay } from "./Overlay";
 import { ScrollArea } from "./ui/scroll-area";
 
 const UserProfileData = () => {
-  const { userProfileId: userId, setUserProfileId } = useGlobalData();
+  const {
+    userProfileId: userId,
+    setUserProfileId,
+    setTextingToUserId,
+  } = useGlobalData();
   const user = useQuery(api.users.getUser, { userId: userId ?? undefined });
   const userBidHistory = useQuery(api.bidhistories.getUserBidHistory, {
     userId: userId ?? undefined,
@@ -50,10 +54,11 @@ const UserProfileData = () => {
               className="w-10 h-10 rounded-full mr-2"
             />
             <p>{user?.name}</p>
-            {/* <FontAwesomeIcon
+            <FontAwesomeIcon
               icon={faMessage}
               className="h-5 w-5 text-green-500 ml-5 cursor-pointer"
-            /> */}
+              onClick={() => setTextingToUserId(user?._id)}
+            />
           </div>
           <div className="flex text-sm text-[#9B9B9B] justify-between w-2/3">
             <p>{numberOfWonBids} won bids</p>

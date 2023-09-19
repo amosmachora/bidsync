@@ -15,6 +15,8 @@ import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { NewItemCreator } from "@/components/CreateNewItem";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { MyItems } from "@/components/MyItems";
+import { PrivateMessageChatBox } from "@/components/PrivateMessageChatBox";
+import { FloatingChatWidget } from "@/components/FloatingChatWidget";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -78,6 +80,8 @@ export default function Home() {
           <BidStream />
         </div>
         <UserProfileData />
+        <PrivateMessageChatBox />
+        <FloatingChatWidget />
       </div>
       {isShowingAddBidItemModal && (
         <NewItemCreator close={() => setIsShowingAddBidItemModal(false)} />

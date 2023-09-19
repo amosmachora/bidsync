@@ -31,6 +31,8 @@ type GlobalData = {
     id: Id<"stageitems">;
     value: null | number;
   } | null;
+  textingToUserId: Id<"users"> | null;
+  setTextingToUserId: React.Dispatch<React.SetStateAction<Id<"users"> | null>>;
 };
 
 export const globalDataContext = createContext<GlobalData>({
@@ -43,6 +45,8 @@ export const globalDataContext = createContext<GlobalData>({
   currentItemIdx: 0,
   removeFromStageCountDown: null,
   setRemoveFromStageCountDown: () => {},
+  textingToUserId: null,
+  setTextingToUserId: () => {},
 });
 
 export const GlobalDataProvider = ({
@@ -58,6 +62,9 @@ export const GlobalDataProvider = ({
     id: Id<"stageitems">;
     value: null | number;
   } | null>(null);
+  const [textingToUserId, setTextingToUserId] = useState<Id<"users"> | null>(
+    null
+  );
 
   const onStageItems = useQuery(api.stageitems.getOnStageItems);
   const onStageItem = onStageItems?.at(currentItemIdx);
@@ -74,6 +81,8 @@ export const GlobalDataProvider = ({
         currentItemIdx,
         removeFromStageCountDown,
         setRemoveFromStageCountDown,
+        setTextingToUserId,
+        textingToUserId,
       }}
     >
       {children}

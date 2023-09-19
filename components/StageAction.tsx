@@ -74,7 +74,7 @@ export const StageAction = () => {
         <MakeBidModal
           close={() => setIsShowingMakeBidModal(false)}
           latestBid={bidHistories
-            ?.sort((a, b) => a._creationTime - b._creationTime)
+            ?.sort((a, b) => b._creationTime - a._creationTime)
             .at(0)}
         />
       )}
